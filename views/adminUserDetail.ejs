@@ -1,0 +1,85 @@
+
+<%- include('includes/admin-head-end') %>
+<%- include('includes/admin-side-pane') %>
+
+<% const options = { year: '2-digit', month: '2-digit', day: '2-digit' }; %>
+
+<h2 style="margin-left: 23vw;margin-bottom: 10px;">User Info</h1>
+<center style="margin-left: 7vw;">
+    
+    <% if (typeof user === 'undefined' || !user) { %>
+       <h4 style="margin-top: 10vh;">User not found!</h1> 
+    <% }else{ %>
+    <table class="table table-bordered" style="margin-left: 120px;width: 70vw;margin-top: 20px;margin-bottom: 50px;">
+        <tr>
+            <th width="55%">Fields</th>
+            <th>Value</th>
+        </tr>
+        
+        <tr>
+            <td>_id</td>
+            <td><%= user._id %></td>
+        </tr>
+        <tr>
+            <td>Full Name</td>
+            <td><%= user.fullName %></td>
+        </tr>
+        <tr>
+            <td>Email</td>
+            <td><%= user.email %></td>
+        </tr>
+        <tr>
+            <td>Phone</td>
+            <td><%= user.Phone %></td>
+        </tr>
+        <tr>
+            <td>Birthday</td>
+            <td> <% if(typeof user.birthday !=='undefined'){ %>
+                <%= user.birthday.toLocaleDateString('en-GB', options) %></td>
+                <%}%>
+        </tr>
+        <tr>
+            <td>Gender</td>
+            <td><%= user.gender %></td>
+        </tr>
+        <tr>
+            <td>Address</td>
+            <td><% const addresses = user.address; %>
+                <% if (Array.isArray(addresses) && addresses.length > 0) { %>
+                    <ul style="margin-left: 15px;">
+                        <% addresses.forEach(address => { %>
+                            <li>
+                                <%= address.fullName %><br> <!-- Full Name -->
+                                <%= address.addressLine %><br> <!-- Address Line -->
+                                <%= address.city %>, <%= address.state %><br> <!-- City, State -->
+                                <%= address.landmark %><br> <!-- Landmark -->
+                                <%= address.pin %><br> <!-- Postal Code -->
+                                Phone: <%= address.phoneNumber %> <!-- Phone Number -->
+                            </li>
+                        <% }); %>
+                    </ul>
+                <% } else { %>
+                    <%= user.address %> <!-- Display the address as is if it's not an array or empty -->
+                <% } %></td>
+        </tr>
+        <tr>
+            <td>Pin Code</td>
+            <td><%= user.pin %></td>
+        </tr>
+        <tr>
+            <td>Verified?</td>
+            <td><%= user.isVerified %></td>
+        </tr>
+        <tr>
+            <td>Blocked?</td>
+            <td><%= user.isBlocked %></td>
+        </tr>
+        <%}%>
+
+    </table>
+    
+</center>
+
+<%- include('includes/tail-end') %>
+
+

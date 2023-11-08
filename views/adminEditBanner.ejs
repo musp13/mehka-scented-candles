@@ -1,0 +1,180 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+
+<head>
+    <meta charset="utf-8">
+    <title>Mehka</title>
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta property="og:title" content="">
+    <meta property="og:type" content="">
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="../admin-assets/imgs/theme/favicon.svg">
+    <!-- Template CSS -->
+    <link href="../admin-assets/css/main.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+    <%- include('includes/admin-head-end') %>
+    <%- include('includes/admin-side-pane') %>	
+
+    <main class="main-wrap">
+        
+        <form action="/admin/editBannerPost" method="post" id="myform">
+        <section class="content-main">
+        
+            <div class="row">
+                <div class="col-6">
+                    <div class="content-header">
+                        <h2 class="content-title">Edit Banner Info</h2>
+                        <div>
+                            <!-- <input class="btn btn-md rounded font-sm hover-up purple-button" value="Publish" type="submit"></input> -->
+                            <button type="submit" style="border-radius: 3px;margin-left: 1px;margin-bottom: 5px;margin-top: 15px;" id="publishBtn" class="btn btn-success report-type-buttons-class purple-button">Edit Banner</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <div class="row">
+                                
+                                <input type="hidden" id="bannerId" name="bannerId" value="<%= banner._id%>">
+                                
+                                <div class="col-md-9">
+                                    <div class="mb-4">
+                                        <label class="form-label">Banner title</label>
+                                        <input value="<%= banner.title %>" type="text" placeholder="Type here" class="form-control" name="title" id="name" onkeyup="titleValidation()">
+                                    </div>
+                                    <span id="title-error"></span>
+                                    
+                                    <div class="mb-4">
+                                        <label class="form-label">Link</label>
+                                        <input value="<%= banner.link %>" placeholder="Type link here" class="form-control" name="link" id="link" onkeyup="linkValidation()">
+                                    </div>
+                                    <span id="link-error"></span>
+                                    
+                                    <div class="mb-4">
+                                        <label class="form-label">Description</label>
+                                        <input value="<%= banner.description %>" placeholder="Type description here" class="form-control" name="description" id="description" onkeyup="descriptionValidation()">
+                                    </div>
+                                    <span id="description-error"></span>
+                                    
+                                </div> <!-- col.// -->
+                            </div> <!-- row.// -->
+                            <hr class="mb-4 mt-0">
+                           <!-- row.// -->
+                            
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </form>
+        <p><%=(typeof message!=='undefined')?message:""%></p>
+        </section> <!-- content-main end// -->
+
+    </main>
+    <script>
+        let regex = /^(?!\s*$).+/;
+      
+        let description = document.getElementById("description");
+        let link = document.getElementById("link");
+      
+        let titleError = document.getElementById("title-error");
+        let descriptionError = document.getElementById("description-error");
+        let linkError = document.getElementById("link-error");
+      
+        let myform = document.getElementById("myform");
+      
+        function titleValidation() {
+          let name = document.getElementById("name").value;
+          let nameInput = document.getElementById("name");
+          if (name.length == 0) {
+            titleError.innerHTML = "Title is required";
+            titleError.style.color = "red";
+            nameInput.style.border = "solid 2px red";
+            return false;
+          }
+          if (!name.match(regex)) {
+            titleError.innerHTML = "Write valid Title";
+            titleError.style.color = "red";
+            nameInput.style.border = "solid 2px red";
+            return false;
+          }
+          titleError.innerHTML = "";
+          titleError.style.color = "green";
+          nameInput.style.border = "solid 2px green";
+          return true;
+        }
+      
+        function descriptionValidation() {
+          let name = document.getElementById("description").value;
+          let nameInput = document.getElementById("description");
+          if (name.length == 0) {
+            descriptionError.innerHTML = "Description is required";
+            descriptionError.style.color = "red";
+            nameInput.style.border = "solid 2px red";
+            return false;
+          }
+          if (!name.match(regex)) {
+            descriptionError.innerHTML = "Write valid Description";
+            descriptionError.style.color = "red";
+            nameInput.style.border = "solid 2px red";
+            return false;
+          }
+          descriptionError.innerHTML = "";
+          descriptionError.style.color = "green";
+          nameInput.style.border = "solid 2px green";
+          return true;
+        }
+        // Add this function to validate the link (URL)
+        function linkValidation() {
+            let linkValue = document.getElementById("link").value;
+            let linkInput = document.getElementById("link");
+
+            // Regular expression for URL validation
+            let urlPattern = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/;
+
+            if (linkValue.length === 0) {
+                linkError.innerHTML = "Link is required";
+                linkError.style.color = "red";
+                linkInput.style.border = "solid 2px red";
+                return false;
+            }
+
+            if (!linkValue.match(urlPattern)) {
+                linkError.innerHTML = "Enter a valid URL";
+                linkError.style.color = "red";
+                linkInput.style.border = "solid 2px red";
+                return false;
+            }
+
+            linkError.innerHTML = "";
+            linkError.style.color = "green";
+            linkInput.style.border = "solid 2px green";
+            return true;
+        }
+
+        
+        myform.addEventListener("submit", (event) => {
+          event.preventDefault();
+          if (!titleValidation() || !descriptionValidation() || !linkValidation()/*  || !imageValidation() */) {
+            return false;
+          } else {
+            myform.submit();
+          }
+        });
+      </script>
+    
+    
+</body>
+
+<%- include('includes/tail-end') %>
+</html>

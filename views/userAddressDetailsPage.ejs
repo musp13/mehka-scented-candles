@@ -1,0 +1,337 @@
+<%- include('includes/user-detail-head-end') %>
+
+<div class="row" style="height: 10vh;"></div>
+
+<% if (user && user.address && user.address.length > 0) { %>
+  <div class="container">
+    <div class="row">
+      <% user.address.forEach((address, index) => { %>
+        <div class="col-md-6">
+          <div class="bg-white card addresses-item mb-4 shadow-sm">
+            <div class="gold-members p-4">
+              <div class="media">
+                <div class="mr-3"><i class="icofont-ui-home icofont-3x"></i></div>
+                <div class="media-body">
+                  <h6 class="mb-1 text-secondary"><%= address.fullName %></h6>
+                  <p class="text-black"><%= address.addressLine %>, <%= address.city %>, <%= address.state %> <%= address.pin %></p>
+                  <p class="mb-0 text-black font-weight-bold">
+                    <a class="text-primary mr-3" data-toggle="modal" data-target="#edit-address-modal-<%= index %>" href="#"><i class="icofont-ui-edit"></i> EDIT</a>
+                    <a class="text-danger" data-toggle="modal" data-target="#delete-address-modal-<%= index %>" href="#"><i class="icofont-ui-delete"></i> DELETE</a>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Add corresponding edit and delete modals here -->
+      <% }); %>
+    </div>
+  </div>
+<% } else { %>
+  <!-- Display a message if there are no addresses -->
+  <div class="container">
+    <p>No addresses found.</p>
+  </div>
+<% } %>
+
+
+<center>
+    <div class="container mt-4">
+        <button id="toggle-address-form" class="btn btn-dark new-address-toggle-button" style="margin-bottom: 15px;" onclick="toggleNewAddress()">Add New Address</button>
+      </div>      
+</center>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-3"></div>
+    <div class="col-md-6">
+      <!-- New Address Card -->
+      <div id="newAddressCard" style="display: none">
+        <form id="addressForm">
+          <input type="hidden" id="userId" name="userId" value="<%= user._id %>" />
+          <div class="card mb-4">
+            <div class="card-header py-3">
+              <h5 class="mb-0 text-font text-uppercase">New address</h5>
+            </div>
+            <div class="card-body">
+              <!-- Your form fields go here as you provided earlier------------------- -->
+
+              <div class="row">
+                <div class="col-md-12 mb-4">
+                  <div class="form-outline">
+                    <input
+                      type="text"
+                      id="fullName"
+                      name="fullName"
+                      class="form-control"
+                    />
+                    <label class="form-label" for="fullName">Full Name</label>
+                  </div>
+                  <!-- Error message container for Full Name -->
+                  <span id="fullNameError" class="error-message"></span>
+                </div>
+              </div>
+
+              <div class="form-outline mb-4">
+                <!-- <input type="text" id="form3Example8" class="form-control" /> -->
+                <textarea
+                  name="addressLine"
+                  id="addressLine"
+                  cols="30"
+                  rows="2"
+                  class="form-control"
+                ></textarea>
+                <label class="form-label" for="addressLine">Address</label>
+                <!-- Error message container for Full Name -->
+                <span id="addressLineError" class="error-message"></span>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6 mb-4">
+                  <div class="form-outline mb-4">
+                    <input
+                      type="text"
+                      id="state"
+                      name="state"
+                      class="form-control"
+                    />
+                    <label class="form-label" for="state">State</label>
+                    <!-- Error message container for Full Name -->
+                    <span id="stateError" class="error-message"></span>
+                  </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                  <div class="form-outline mb-4">
+                    <input
+                      type="text"
+                      id="city"
+                      name="city"
+                      class="form-control"
+                    />
+                    <label class="form-label" for="city">City</label>
+                    <!-- Error message container for Full Name -->
+                    <span id="cityError" class="error-message"></span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-outline mb-4">
+                <input
+                  type="text"
+                  id="landmark"
+                  name="landmark"
+                  class="form-control"
+                />
+                <label class="form-label" for="landmark">Landmark</label>
+                <!-- Error message container for Full Name -->
+                <span id="landMarkError" class="error-message"></span>
+              </div>
+
+              <div class="form-outline mb-4">
+                <input type="text" id="pin" name="pin" class="form-control" />
+                <label class="form-label" for="pin">PIN</label>
+                <!-- Error message container for Full Name -->
+                <span id="pinError" class="error-message"></span>
+              </div>
+
+              <div class="form-outline mb-4">
+                <input
+                  type="text"
+                  id="phoneNumber"
+                  name="phoneNumber"
+                  class="form-control"
+                />
+                <label class="form-label" for="phoneNumber"
+                  >Phone Number</label
+                >
+                <!-- Error message container for Full Name -->
+                <span id="phoneNumberError" class="error-message"></span>
+              </div>
+
+              <!-- ... ------------------------------------------------------------------->
+              <div class="d-flex justify-content-end pt-3">
+                <button type="button" class="btn btn-dark ms-2 send-address-btn">Add Address</button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="col-md-3"></div>
+  </div>
+</div>
+
+<script>
+  function toggleNewAddress() {
+    /* to toggle address button to add new address box */
+    var newAddressCard = document.getElementById("newAddressCard");
+    if (newAddressCard.style.display == "none") {
+      newAddressCard.style.display = "block";
+    } else {
+      newAddressCard.style.display = "none";
+    }
+  }
+</script>
+<script>
+    $(document).ready(function () {
+        let userId = "<%= user._id %>";
+        function addAddress() {
+      const userId = $("#userId").val(); // Get the user ID
+      const fullName = $("#fullName").val(); // Get other form fields by ID
+      const addressLine = $("#addressLine").val();
+      const state = $("#state").val();
+      const city = $("#city").val();
+      const landmark = $("#landmark").val();
+      const pin = $("#pin").val();
+      const phoneNumber = $("#phoneNumber").val();
+
+      $(".error-message").text(""); // for displaying error messages for form validation
+
+      // Perform validation on each field
+      if (fullName.trim() === "") {
+        $("#fullNameError").text("Please enter your full name.");
+        return;
+      }
+
+      const nameRegex = /^[A-Za-z]+$/;
+      if (!nameRegex.test(fullName)) {
+        $("#fullNameError").text("Full name should contain only letters.");
+        return;
+      }
+
+      if (addressLine.trim() === "") {
+        $("#addressLineError").text("Please enter your address.");
+        return;
+      }
+
+      if (state.trim() === "") {
+        $("#stateError").text("Please enter your state.");
+        return;
+      }
+      const stateRegex = /^[A-Za-z]+$/;
+      if (!stateRegex.test(state)) {
+        $("#stateError").text("State name should contain only letters.");
+        return;
+      }
+
+      if (city.trim() === "") {
+        $("#cityError").text("Please enter your city.");
+        return;
+      }
+
+      if (landmark.trim() === "") {
+        $("#landmarkError").text("Please enter a landmark.");
+        return;
+      }
+
+      if (pin.trim() === "") {
+        $("#pinError").text("Please enter a PIN code.");
+        return;
+      }
+
+      const pinRegex = /^[1-9]{6}$/;
+      if (!pinRegex.test(pin)) {
+        $("#pinError").text("PIN Code should contain only 6 digits.");
+        return;
+      }
+
+      if (phoneNumber.trim() === "") {
+        $("#phoneNumberError").text("Please enter your phone number.");
+        return;
+      }
+
+      const phoneNumberRegex = /^[0-9]{10}$/;
+      if (!phoneNumberRegex.test(phoneNumber)) {
+        $("#phoneNumberError").text(
+          "Phone Number should contain only 10 digits."
+        );
+        return;
+      }
+
+      // Create an object with the form data
+      const formData = {
+        userId: userId,
+        fullName: fullName,
+        addressLine: addressLine,
+        state: state,
+        city: city,
+        landmark: landmark,
+        pin: pin,
+        phoneNumber: phoneNumber,
+        // Add more fields as needed
+      };
+
+      // Send the form data to the server using $.ajax
+      $.ajax({
+        type: "POST",
+        url: "/addAddressCheckout", //url to submit form
+        data: formData,
+        dataType: "json",
+        success: function (response) {
+
+          // Reset the form
+          $("#addressForm")[0].reset(); // Using [0] to access the DOM element
+
+          // Assuming 'response.user' contains the updated user object
+          const updatedUser = response.user;
+
+          /* // Assuming 'addressList' is the container element for the address selection list
+          const addressList = document.getElementById("addressSelectionForm");
+
+          // Create a new address element
+          const newAddressDiv = document.createElement("div");
+          newAddressDiv.classList.add(
+            "form-check",
+            "d-flex",
+            "justify-content-between"
+          ); */
+
+          // Generate the HTML for the new address (customize as needed)
+          const newAddressHTML = `
+            <input class="form-check-input" type="radio" name="selectedAddress" id="address${
+              updatedUser.address.length - 1
+            }" value="${
+            updatedUser.address[updatedUser.address.length - 1]._id
+          }">
+            <label class="form-check-label" for="address${
+              updatedUser.address.length - 1
+            }">
+              ${
+                updatedUser.address[updatedUser.address.length - 1].fullName
+              }, ${
+            updatedUser.address[updatedUser.address.length - 1].addressLine
+          }, ${updatedUser.address[updatedUser.address.length - 1].city}, ${
+            updatedUser.address[updatedUser.address.length - 1].pin
+          }
+            </label>
+            <button class="btn btn-link trash-icon" data-address-id="${
+              updatedUser.address[updatedUser.address.length - 1]._id
+            }">
+              <i class="fa-regular fa-trash-can"></i>
+            </button>
+          `;
+
+          // Set the innerHTML of the new address element
+          newAddressDiv.innerHTML = newAddressHTML;
+
+          // Append the new address element to the address selection list
+          addressList.appendChild(newAddressDiv);
+
+          toggleNewAddress();
+        },
+        error: function (error) {
+          console.error("Error:", error);
+        },
+      });
+    } // addAddress() closing tag
+
+    // Attach a click event handler to the button
+    $(".send-address-btn").click(function () {
+      addAddress();
+    });
+
+
+    });//document.ready close
+</script>
+
+<%- include('includes/tail-end') %>

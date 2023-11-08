@@ -1,0 +1,359 @@
+
+<%- include('includes/admin-head-end') %>
+<%- include('includes/admin-side-pane') %>
+<div class="row" style="margin-bottom: 8vh;margin-left: 8vw;">
+    <div class="col-12">
+        <center>
+            <h1>
+                <b>Add Product</b>
+            </h1>
+        </center>
+    </div>
+</div>
+
+<!-- ------------Add Product Form----------------- -->
+<form class="form-horizontal" action="/admin/addProductPost" method="post"  enctype="multipart/form-data" style="margin-left: 10vw;">
+    <fieldset>
+    
+    <!-- Text input-->
+
+    
+    <div class="form-group row" style="margin-bottom: 25px;">
+        <div class="col-md-3"></div>
+      <label class="col-md-2 control-label" for="name">PRODUCT NAME</label>  
+      <div class="col-md-4">
+      <input id="name" name="name" placeholder="" class="form-control input-md" required="" type="text">
+      <div id="productNameError" class="text-danger"></div> 
+      </div>
+    </div>
+    
+    <!-- Text input-->
+    <div class="form-group row" style="margin-bottom: 25px;">
+        <div class="col-md-3"></div>
+      <label class="col-md-2 control-label" for="description">PRODUCT DESCRIPTION</label>  
+      <div class="col-md-4">
+      <input id="description" name="description" placeholder="" class="form-control input-md" required="" type="text">
+        
+      </div>
+    </div>
+    
+    <!-- Select Basic -->
+    <div class="form-group row" style="margin-bottom: 25px;">
+        <div class="col-md-3"></div>
+        <label class="col-md-2 control-label" for="category">PRODUCT CATEGORY</label>
+        <div class="col-md-4">
+          <select id="category" name="category" class="form-control">
+            <% categories.forEach(category => { %>
+              <option value="<%= category._id %>"><%= category.name %></option>
+            <% }); %>
+          </select>
+        </div>
+      </div>
+    
+    <!-- Text input-->
+    <div class="form-group row" style="margin-bottom: 25px;">
+        <div class="col-md-3"></div>
+      <label class="col-md-2 control-label" for="quantity">PRODUCT VOLUME</label>  
+      <div class="col-md-4">
+      <input id="quantity" name="quantity" placeholder="" class="form-control input-md" required="" type="text">
+      <div id="quantityError" class="text-danger"></div> 
+      </div>
+    </div>
+    
+    <!--Text input-->
+    <div class="form-group row" style="margin-bottom: 25px;">
+        <div class="col-md-3"></div>
+        <label class="col-md-2 control-label" for="price">PRODUCT PRICE</label>  
+        <div class="col-md-4">
+            <input id="price" name="price" placeholder="" class="form-control input-md" required="" type="text">
+            <div id="priceError" class="text-danger"></div>
+        </div>
+    </div>
+
+    <!-- Text input-->
+    <div class="form-group row" style="margin-bottom: 25px;">
+        <div class="col-md-3"></div>
+      <label class="col-md-2 control-label" for="stockLeft">STOCK LEFT</label>  
+      <div class="col-md-4">
+      <input id="stockLeft" name="stockLeft" placeholder="" class="form-control input-md" required="" type="text">
+      <div id="stockLeftError" class="text-danger"></div> 
+      </div>
+    </div>
+    
+    <!-- Textarea -->
+    <div class="form-group row" style="margin-bottom: 25px;">
+        <div class="col-md-3"></div>
+      <label class="col-md-2 control-label" for="detailDescription">DETAIL DESCRIPTION</label>
+      <div class="col-md-4">                     
+        <textarea class="form-control" id="detailDescription" name="detailDescription"></textarea>
+      </div>
+    </div>
+    
+    <!-- Textarea -->
+    <div class="form-group row" style="margin-bottom: 25px;">
+        <div class="col-md-3"></div>
+      <label class="col-md-2 control-label" for="ingredients">INGREDIENTS</label>
+      <div class="col-md-4">                     
+        <textarea class="form-control" id="ingredients" name="ingredients"></textarea>
+      </div>
+    </div>
+    
+    <!-- Text input-->
+    <div class="form-group row" style="margin-bottom: 25px;">
+        <div class="col-md-3"></div>
+      <label class="col-md-2 control-label" for="discount">PERCENTAGE DISCOUNT</label>  
+      <div class="col-md-4">
+      <input id="discount" name="discount" placeholder="" class="form-control input-md" type="text" value="0" required>
+      <div id="discountError" class="text-danger"></div> 
+      </div>
+    </div>
+    
+    
+    <div class="form-group row" style="margin-bottom: 25px;">
+        <div class="col-md-3"></div>
+        <label class="col-md-2 control-label" for="aromaLevel">AROMA LEVEL</label>
+        <div class="col-md-4">
+          <select id="aromaLevel" name="aromaLevel" class="form-control input-md" required="">
+            <option value="soft">Soft</option>
+            <option value="medium">Medium</option>
+            <option value="strong">Strong</option>
+          </select>
+        </div>
+      </div>
+    
+    <div class="form-group row" style="margin-bottom: 25px;">
+        <div class="col-md-3"></div>
+        <label class="col-md-2 control-label" for="aromaType">AROMA TYPE</label>
+        <div class="col-md-4">
+          <select id="aromaType" name="aromaType" class="form-control input-md" required="">
+            <option value="fruits">Fruits</option>
+            <option value="nature">Nature</option>
+            <option value="parfum">Parfum</option>
+          </select>
+        </div>
+      </div>
+      
+    <div class="form-group row" style="margin-bottom: 25px;">
+        <div class="col-md-3"></div>
+        <label class="col-md-2 control-label" for="productSize">PRODUCT SIZE</label>
+        <div class="col-md-4">
+          <select id="productSize" name="productSize" class="form-control input-md" required="">
+            <option value="small">Small</option>
+            <option value="medium">Medium</option>
+            <option value="big">Big</option>
+          </select>
+        </div>
+      </div>
+      
+    
+    <!-- Text input-->
+    <div class="form-group row" style="margin-bottom: 25px;">
+        <div class="col-md-3"></div>
+      <label class="col-md-2 control-label" for="howToUse">HOW TO USE</label>  
+      <div class="col-md-4">
+      <!-- <input id="author" name="author" placeholder="" class="form-control input-md" required="" type="text"> -->
+      <textarea class="form-control" id="howToUse" name="howToUse"></textarea> 
+      </div>
+    </div>
+    
+    <!-- Text input-->
+    <div class="form-group row" style="margin-bottom: 25px;">
+        <div class="col-md-3"></div>
+      <label class="col-md-2 control-label" for="howToFeel">HOW TO FEEL</label>  
+      <div class="col-md-4">
+      <!-- <input id="enable_display" name="enable_display" placeholder="" class="form-control input-md" required="" type="text"> -->
+      <textarea class="form-control" id="howToFeel" name="howToFeel"></textarea>        
+      </div>
+    </div>
+        
+     <!-- File Button --> 
+    <div class="form-group row" style="margin-bottom: 25px;">
+        <div class="col-md-3"></div>
+      <label class="col-md-2 control-label" for="mainImage">MAIN IMAGE</label>
+      <div class="col-md-4">
+        <input id="mainImage" name="mainImage" class="input-file" type="file">
+      </div>
+    </div>
+    <!-- File Button --> 
+    <div class="form-group row" style="margin-bottom: 25px;">
+        <div class="col-md-3"></div>
+      <label class="col-md-2 control-label" for="auxiliaryImages">AUXILIARY_IMAGES</label>
+      <div class="col-md-4">
+        <input id="auxiliaryImages" name="auxiliaryImages" class="input-file" type="file" multiple>
+      </div>
+    </div>
+
+    <div class="row" style="color:brown;margin-bottom: 20px;">
+      <div class="col-md-3"></div>
+      <div class="col-md-6">
+        <% if(typeof message!=='undefined'){ %>
+          <center><%=message%></center>
+        <% } %>
+      </div>
+    </div>
+    
+    <!-- Button -->
+    <div class="form-group row" style="margin-bottom: 25px;">
+        <div class="col-md-3"></div>
+      <!-- <label class="col-md-4 control-label" for="singlebutton">Single Button</label>
+ -->      <div class="col-md-6">
+        <button type="submit" id="singlebutton" name="singlebutton" class="btn btn-dark w-100">Add</button>
+      </div>
+      </div>
+    
+    </fieldset>
+    </form>
+
+     
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+  <script>
+    let existingProductNames = '<%=existingProductNames%>';
+    existingProductNames = existingProductNames.split(',');
+    existingProductNames = existingProductNames.map(name => name.toLowerCase());
+    console.log('existingProductNames',existingProductNames);
+    console.log(typeof existingProductNames);
+  </script>
+<script>
+  $(document).ready(function () {
+    console.log('hello, document loaded');
+    const $productNameInput = $('#name');
+    const $productNameError = $('#productNameError');
+    const $submitButton = $('#singlebutton'); // Select the submit button
+    const $quantityInput = $('#quantity');
+    const $quantityError = $('#quantityError');
+    const $priceInput = $('#price');
+    const $priceError = $('#priceError');
+    const $stockLeftInput = $('#stockLeft');
+    const $stockLeftError = $('#stockLeftError');
+    const $discountInput = $('#discount');
+    const $discountError = $('#discountError');
+    
+    // Validation function for product name
+    $('#name').on('keyup', function () {
+      console.log('keyup');
+      //const productName = $(this).val().trim().toLowerCase();;
+      const productName = $(this).val().toLowerCase();
+
+        if(productName=='')
+        {
+          $productNameError.text('');
+          $submitButton.prop('disabled', false); // Enable the submit button
+
+        }
+        else if (/^\s*$/.test(productName)) {
+            // Clear the error message if the field is empty
+            $productNameError.text('Product name cannot be blank space.');
+            $submitButton.prop('disabled', true); // Disable the submit button
+
+        } else if (existingProductNames.includes(productName.trim())) {
+            // Display an error message if the category name already exists
+            $productNameError.text('Product with this name already exists.');
+            $submitButton.prop('disabled', true); // Disable the submit button
+
+        } else {
+            // Clear the error message if the category name is unique
+            $productNameError.text('');
+            $submitButton.prop('disabled', false); // Enable the submit button
+
+        }
+      });
+      // Use AJAX to check if the product name already exists
+      // Display an error message if it does
+
+      // Validation function for product volume
+      $quantityInput.on('keyup', function () {
+        const quantity = $(this).val();
+
+        if (quantity === '') {
+            // Clear the error message if the field is empty
+            $quantityError.text('');
+            $submitButton.prop('disabled', false); // Enable the submit button
+        } else if (/^\s*$/.test(quantity)) {
+            // Display an error message if the quantity is a blank space
+            $quantityError.text('Product volume cannot be blank space.');
+            $submitButton.prop('disabled', true); // Disable the submit button
+        }else if (!/^\d+(\.\d+)?$/.test(quantity.trim()) || parseFloat(quantity.trim()) <= 0) {
+            // Display an error message if the quantity is not a positive number
+            $quantityError.text('Product volume must be a positive number.');
+            $submitButton.prop('disabled', true); // Disable the submit button
+        } else {
+            // Clear the error message if the quantity is a positive number
+            $quantityError.text('');
+            $submitButton.prop('disabled', false); // Enable the submit button
+        }
+      });
+
+      // Validation function for product price
+      $priceInput.on('keyup', function () {
+          const price = $(this).val();
+
+          if (price === '') {
+              // Clear the error message if the field is empty
+              $priceError.text('');
+              $submitButton.prop('disabled', false); // Enable the submit button
+          } else if (/^\s*$/.test(price)) {
+              // Display an error message if the price is a blank space
+              $priceError.text('Product price cannot be blank space.');
+              $submitButton.prop('disabled', true); // Disable the submit button
+          } else if (!/^\d+(\.\d+)?$/.test(price.trim()) || parseFloat(price.trim()) <= 0) {
+              // Display an error message if the price is not a positive number
+              $priceError.text('Product price must be a positive number.');
+              $submitButton.prop('disabled', true); // Disable the submit button
+          } else {
+              // Clear the error message if the price is a positive number
+              $priceError.text('');
+              $submitButton.prop('disabled', false); // Enable the submit button
+          }
+      });
+
+      // Validation function for stock left (positive integer)
+      $stockLeftInput.on('keyup', function () {
+          const stockLeft = $(this).val();
+
+          if (stockLeft === '') {
+              // Clear the error message if the field is empty
+              $stockLeftError.text('');
+              $submitButton.prop('disabled', false); // Enable the submit button
+          } else if (/^\s*$/.test(stockLeft)) {
+              // Display an error message if the stock left is a blank space
+              $stockLeftError.text('Stock left cannot be blank space.');
+              $submitButton.prop('disabled', true); // Disable the submit button
+          } else if (!/^\d+$/.test(stockLeft.trim()) || parseInt(stockLeft.trim()) <= 0) {
+              // Display an error message if the stock left is not a positive integer
+              $stockLeftError.text('Stock left must be a positive integer.');
+              $submitButton.prop('disabled', true); // Disable the submit button
+          } else {
+              // Clear the error message if the stock left is a positive integer
+              $stockLeftError.text('');
+              $submitButton.prop('disabled', false); // Enable the submit button
+          }
+      });
+      
+      // Validation function for discount
+      $discountInput.on('keyup', function () {
+          const discount = $(this).val();
+
+          if (stockLeft === '') {
+              // Clear the error message if the field is empty
+              $discountError.text('');
+              $submitButton.prop('disabled', false); // Enable the submit button
+          }else if (/^\s*$/.test(discount)) {
+              // Clear the error message if the discount is a blank space
+              $discountError.text('Discount cannot be blank space.');
+              $submitButton.prop('disabled', true); // Disable the submit button
+          } else if (!/^\d+(\.\d+)?$/.test(discount.trim()) || parseFloat(discount.trim()) < 0 || parseFloat(discount.trim()) > 100) {
+              // Display an error message if the discount is not a valid percentage value (0-100)
+              $discountError.text('Discount must be a valid percentage between 0 and 100.');
+              $submitButton.prop('disabled', true); // Disable the submit button
+          } else {
+              // Clear the error message if the discount is a valid percentage
+              $discountError.text('');
+              $submitButton.prop('disabled', false); // Enable the submit button
+          }
+      });
+    
+  });//document.ready close
+</script>
+
+<%- include('includes/tail-end') %>
+

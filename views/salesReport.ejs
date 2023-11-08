@@ -1,0 +1,280 @@
+<%- include('includes/admin-head-end') %>
+<%- include('includes/admin-side-pane') %>
+
+<h2 id="salesreport-heading" style="margin-left: 17vw;margin-bottom: 10px;">Sales Report</h1>
+<div class="d-flex" style="margin-left: 5vw;">
+    <div style="margin-left: 12vw;margin-bottom: 10px;" class="date-pickers">
+        <form id="salesReportDateForm" class=" d-flex">
+            <div class="form-group" style="width: 11vw;">
+                <center><label style="color: gray;" for="startDate">Start Date</label></center>
+                <input class="form-control" type="date" name="startDate" id="startDate" placeholder="startDate">
+            </div>
+            <div class="form-group" style="width: 11vw;margin-left: 10px;">
+                <center><label style="color: gray;" for="endDate">End Date</label></center>
+                <input class="form-control" type="date" name="endDate" id="endDate" placeholder="endDate">
+            </div>
+            <div class="form-group"><button class="btn btn-primary btn-block" type="submit">Submit</button></div>
+        </form>
+        <div class="d-flex">
+          <button value="today" id="todayBtn" type="button" class="btn btn-success report-type-buttons-class pink-button" style="width: 100px;margin-left: 0px;border-radius: 1px;">Today</button>
+          <button value="thisWeek" id="thisWeekBtn" type="button" class="btn btn-success report-type-buttons-class pink-button" style="width: 100px;margin-left: 1px;border-radius: 1px;">This Week</button>
+          <button value="thisMonth" id="thisMonthBtn" type="button" class="btn btn-success report-type-buttons-class pink-button" style="width: 100px;margin-left: 1px;border-radius: 1px;">This Month</button>
+
+        </div>
+    </div>
+    <div id="report-type-buttons" style="margin-left: 23vw ;margin-top: 10vh;">
+        <!-- <button id="allSalesBtn" type="button" class="btn btn-success report-type-buttons-class pink-button">All Sales</button> -->
+        <!-- <button id="categorySalesBtn" type="button" class="btn btn-success report-type-buttons-class purple-button">Category Sales</button>
+        <button id="productSalesBtn" type="button" class="btn btn-success report-type-buttons-class blue-button">Product Sales</button> -->
+        <button value="Download as Pdf" id="pdfBtn" type="button" class="btn btn-success report-type-buttons-class purple-button btn_print"><i class="fa-regular fa-file-pdf"></i>Download as PDF</button>
+        <button id="excelBtn" type="button" class="btn btn-success report-type-buttons-class blue-button btn_print" onclick="export_data()" value="Export to excel"><i class="fa-regular fa-file-excel"></i> Download as Excel</button>
+        
+        <!-- <button type="button" class="btn btn-secondary btn_print m-3" value="Download as Pdf"><i class="fas fa-file-pdf"></i> Download as PDF</button>
+  
+      <button type="button" class="btn btn-secondary btn_print m-3" onclick="export_data()" value="Export to excel"><i class="fas fa-file-excel"></i> Download as Excel</button>
+   -->
+      </div>
+</div>
+<section class="intro" style="margin-left: 16vw;border: solid rgb(249,245,234);">
+    <div class="gradient-custom-1 h-150" style="margin-right: 3vw;margin-bottom: 10vh;">
+      <div class="mask d-flex align-items-center h-150">
+        <div class="container">
+          <div class="row justify-content-center">
+            <div class="col-12">
+              <div class="table-responsive bg-white">
+                <table class="table mb-0" id="salesReportTable" name="salesReportTable">
+                    <input type="hidden" id="reportType" name="reportType" value="allSales">
+                  <thead>
+                    <tr>
+                      <th scope="col">ORDER ID</th>
+                      <th scope="col">USER NAME</th>
+                      <th scope="col">ITEM NAME</th>
+                      <th scope="col">PRICE</th>
+                      <th scope="col">PAYMENT MODE</th>
+                      <th scope="col">DATE</th>
+                    </tr>
+                  </thead>
+                  <% if(orders.length>0){ %>
+                    <% for(let i=0; i < orders.length; i++) { %>
+                  <tbody id="sales-report-table-body">
+                    <tr>
+                      <th scope="row" style="color: #666666;"><%= orders[i]._id %></th>
+                      <td><%= orders[i].userId.fullName %></td>
+                      <td>
+                        <% for(let j=0; j < orders[i].orderItems.length; j++) { %>
+                            <%=j+1%>) <%=orders[i].orderItems[j].productId.name%> <span style="color:red">x <%=orders[i].orderItems[j].quantity%></span>
+                            <br>
+                        <%}%>
+                      </td>
+                      <td><%= orders[i].totalAmount %></td>
+                      <td><%= orders[i].paymentMethod %></td>
+                      <td><%=new Date(orders[i].orderDate).toLocaleString() %></td>
+                    </tr>
+                    <% } %>                  
+                <% }else{ %>               
+                    <tr>
+                        <td colspan="2">No Sales Found</td>
+                    </tr>
+                <% } %>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- <script src="https://html2pdf.js.org/dist/html2pdf.bundle.min.js"></script>
+ --><!-- Add the html2pdf library script -->
+ <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/xlsx/0.15.6/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+
+
+
+
+
+  <script>
+    $(document).ready(function(){
+
+        // Handle 'Today' button click
+        $('#todayBtn').click(function(){
+          const reportPeriod = "today";//// Add this report time
+          const today = new Date();
+          const startDate = today.toISOString().split('T')[0];
+          let endDate = new Date(today);
+          endDate.setDate(endDate.getDate()+1);
+          endDate = endDate.toISOString().split('T')[0];
+          fetchSalesReportByDate(startDate, endDate);
+        });
+
+        // Handle 'This Week' button click
+        $('#thisWeekBtn').click(function(){
+          const today = new Date();
+          let startDate = new Date(today.setDate(today.getDate()-today.getDay()));
+          startDate = startDate.toISOString().split('T')[0];
+          let endDate = new Date(today);
+          endDate.setDate(endDate.getDate()+7);
+          endDate = endDate.toISOString().split('T')[0];
+          fetchSalesReportByDate(startDate, endDate);
+        });
+
+        // Handle 'This Month' button click
+        $('#thisMonthBtn').click(function(){
+          const today = new Date();
+          let startDate = new Date(today.getFullYear(), today.getMonth(), 1);
+          startDate = startDate.toISOString().split('T')[0];
+          const nextMonth = new Date(today.getFullYear(), today.getMonth() + 1, 1);
+          let endDate = new Date(nextMonth.setDate(nextMonth.getDate()-1));
+          endDate = endDate.toISOString().split('T')[0];
+
+          fetchSalesReportByDate(startDate, endDate);
+        });
+
+        function fetchSalesReportByDate(startDate, endDate){
+          console.log('reached fetchSalesReportByDate');
+          var reportType = $("#reportType").val();
+          // Make an AJAX request to fetch the sales report by the selected date filter
+          $.ajax({
+                type: "GET",
+                url: "/admin/salesReportByDate",
+                data: {startDate: startDate,endDate: endDate, reportType:reportType},
+                success: function(data){
+                    // Update the report table with the fetched data
+                   document.getElementById('salesReportTable').innerHTML = data;
+                    console.log(data);
+                },
+                error: function(error){
+                    console.log("Error:",error);
+                }
+            });
+        }
+
+        $("#salesReportDateForm").submit(function(e){
+            e.preventDefault();
+            var startDate = $("#startDate").val();
+            var endDate = $("#endDate").val();
+            var reportType = $("#reportType").val();
+
+            // Make an AJAX request to fetch the sales report
+            $.ajax({
+                type: "GET",
+                url: "/admin/salesReportByDate",
+                data: {startDate: startDate,endDate: endDate, reportType:reportType},
+                success: function(data){
+                    // Update the report table with the fetched data
+                    // Update the report table with the fetched data
+                   // $("#sales-report-table-body").html(data);
+                   document.getElementById('salesReportTable').innerHTML = data;
+                    console.log(data);
+                },
+                error: function(error){
+                    console.log("Error:",error);
+                }
+            });
+        }); // date form submit close
+
+        // When the page loads or when the "All Sales" button is clicked
+        $("#allSalesBtn").click(function() {
+            // Clear the date fields
+            $("#startDate").val("");
+            $("#endDate").val("");
+
+            // Make an AJAX request to fetch the sales report
+            $.ajax({
+            type: "GET",
+            url: "/admin/getAllSalesReport",
+            //data: { startDate: startDate, endDate: endDate, reportType: reportType },
+            success: function(data) {
+                // Update the entire content of the sales report table
+                document.getElementById('salesReportTable').innerHTML = data;
+            },
+            error: function(error) {
+                console.log("Error:", error);
+            }
+            });
+        });//allSales button click close
+
+        // When the page loads or when the "Category Sales" button is clicked
+        $("#categorySalesBtn").click(function() {
+            // Clear the date fields
+            $("#startDate").val("");
+            $("#endDate").val("");
+
+            // Make an AJAX request to fetch the sales report
+            $.ajax({
+            type: "GET",
+            url: "/admin/getcategorySalesReport",
+            //data: { startDate: startDate, endDate: endDate, reportType: reportType },
+            success: function(data) {
+                // Update the entire content of the sales report table
+                document.getElementById('salesReportTable').innerHTML = data;
+            },
+            error: function(error) {
+                console.log("Error:", error);
+            }
+            });
+        });//allSales button click close
+
+        // Update the element to be exported to PDF
+        //var element = document.getElementById('salesReportTable');
+
+        $(document).on('click', '#pdfBtn', function (event) {
+          event.preventDefault();
+
+          // Show a loading spinner while generating the PDF
+          $('#pdfBtn').text('Generating PDF...');
+
+          var element = document.getElementById('salesReportTable');
+          let randomNumber = Math.floor(Math.random() * (10000000000 - 1)) + 1;
+              var opt = {
+                  margin: 0,
+                  filename: 'SalesReport' + randomNumber + '.pdf',
+                  html2canvas: { scale: 10 },
+                  jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+              };
+  
+          /* html2pdf().set(opt).from(element).save(); */ //.outputPdf()
+          html2pdf().set(opt).from(element).save().then(function(pdf) {
+            // Hide the loading spinner
+            $('#pdfBtn').text('Download as PDF');
+            
+            // Create a blob URL for the PDF
+            //const blob = new Blob([pdf], { type: 'application/pdf' });
+            //const url = URL.createObjectURL(blob);
+            
+            // Create a temporary link to trigger the download
+           /*  const a = document.createElement('a');
+            a.style.display = 'none';
+            a.href = url;
+            a.download = 'SalesReport.pdf';
+            document.body.appendChild(a); */
+            
+            // Trigger the click event to download the PDF
+           // a.click();
+            
+            // Clean up
+           // document.body.removeChild(a);
+            //URL.revokeObjectURL(url);
+          });
+        });
+      
+  
+
+    
+
+    });//document.ready close
+    function export_data() {
+      let data = document.getElementById('salesReportTable');
+      var fp = XLSX.utils.table_to_book(data, { sheet: 'SalesReport' });
+      XLSX.write(fp, {
+          bookType: 'xlsx',
+          type: 'base64'
+      });
+      XLSX.writeFile(fp, 'test.xlsx');  
+    }
+  </script>
+<%- include('includes/tail-end') %>

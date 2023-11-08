@@ -1,0 +1,28 @@
+
+<%- include('includes/admin-head-end') %>
+<%- include('includes/admin-side-pane') %>
+
+
+<center style="margin-left: 10vw;">
+    <div><h1><b>Update Category</b></h1></div>
+    <div class="row">
+      <div class="col-md-12">
+        <form action="/admin/editCategoryPost?" method="post" class="p-4" style="width: 40vw;border:1px solid rgba(214, 214, 214, 0.849);border-radius: 10px;box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); ">
+          <div class="form-group">
+            <label for="name">Category Name</label>
+            <input type="text" class="form-control" id="name" name="name" placeholder="categoryName" value="<%=category.name%>">
+          </div>
+          <div class="form-group" style="padding-top: 20px;">
+            <label for="description">Description</label>
+            <textarea class="form-control" name="description" id="description" cols="30" rows="3" placeholder="Password"%>"><%=category.description%></textarea>
+            <!-- <input type="password" class="form-control" id="exampleDropdownFormPassword2" placeholder="Password"> -->
+          </div>
+          <input type="hidden" id="id" name="id" value="<%=category._id%>">
+          
+          <button type="submit" class="btn btn-dark" style="margin-top: 25px;width: 100px;">Edit</button>
+        </form>
+      </div>
+    </div>
+</center>
+
+<%- include('includes/tail-end') %>

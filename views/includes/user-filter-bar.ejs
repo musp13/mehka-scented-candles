@@ -1,0 +1,99 @@
+<!-- Navbar -->
+<section id="Filter" class="navbar navbar-expand-lg navbar-light" style="background-color: #F9F5EA; border-top: 1px solid rgba(165, 42, 42, 0.055);border-bottom: 1px solid rgba(165, 42, 42, 0.055);padding-bottom: 3px;">
+    <div class="row"></div>
+      <hr>
+        <div class="col-md-7">
+          <form id="sortForm" action="/userProductList?search=<%=search%>&page=<%=currentPage%>" method="get">
+            <input type="hidden" name="price" id="price" value="<%=price%>">
+            <input type="hidden" name="productSize" id="productSize" value="<%=productSize%>">
+            <input type="hidden" name="aromaType" id="aromaType" value="<%=aromaType%>">
+            <input type="hidden" name="aromaLevel" id="aromaLevel" value="<%=aromaLevel%>">
+            <input type="hidden" name="search" id="search" value="<%=search%>">
+            <select id="sort" name="sort" class="form-control input-md" style="width:150px;margin-left: 30px;" onchange="submitSortForm()">
+              <option value="" disabled <%= !sort? 'selected' : '' %> >Sort: Price</option><!-- here, i'm trying to display only the oprion which is previously selected. if there's no value in sort, this value should be displayed. otherwise,  previously selected value should be displayed. which is passed in a variable called sort  -->
+              <option value="1" <%= sort==1 ? 'selected' : '' %>>Low to High</option>
+              <option value="-1" <%= sort==-1 ? 'selected' : '' %> >High to Low</option>
+              <option value="">None</option>
+            </select>
+          </form>
+          <script>
+            function submitSortForm() {
+                document.getElementById('sortForm').submit();
+            }
+          </script>
+    
+        </div>
+    <!-- Container wrapper -->
+    <form action="/userProductList" method="get" style="width: 100%;">
+    <div class="container-fluid col-md-12">
+      <!-- Toggle button -->
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-mdb-toggle="collapse"
+        data-mdb-target="#navbarRightAlignExample"
+        aria-controls="navbarRightAlignExample"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <i class="fas fa-bars"></i>
+      </button>
+  
+      <!-- Collapsible wrapper -->
+      <div class="collapse navbar-collapse" id="navbarRightAlignExample">
+        <!-- Right-aligned links -->
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+          <!-- Empty li to push items to the right -->
+          <li class="nav-item" style="flex: 1;"></li>
+          <input type="hidden" name="search" id="search" value="<%=search%>">
+          <input type="hidden" name="sort" id="sort" value="<%=sort%>">
+          <input type="hidden" name="page" id="page" value="1">
+          <li style="margin-right: 10px;">
+            <select class="selectpicker form-control border-0 mb-1 mt-2 px-2 py-2 rounded" id="aromaLevel" name="aromaLevel"><!--class="shadow" -->
+              <option value="" disabled <%= !aromaLevel ? 'selected' : '' %>>Aroma Level</option>
+              <option value="soft" <%= aromaLevel=='soft' ? 'selected' : '' %> >Soft</option>
+              <option value="medium" <%= aromaLevel=='medium' ? 'selected' : '' %> >Medium</option>
+              <option value="strong" <%= aromaLevel=='strong' ? 'selected' : '' %> >Strong</option>
+              <option value="">None</option>          
+          </select>
+        </li>
+        <li style="margin-right: 10px;">
+          <select class="selectpicker form-control border-0 mb-1 mt-2 px-2 py-2 rounded" id="aromaType" name="aromaType"><!--  shadow -->
+            <option value="" disabled <%= !aromaType ? 'selected' : '' %>>Aroma Type</option>
+            <option value="fruits" <%= aromaType=='fruits' ? 'selected' : '' %> >Fruits</option>
+            <option value="nature" <%= aromaType=='nature' ? 'selected' : '' %> >Nature</option>
+            <option value="parfum" <%= aromaType=='parfum' ? 'selected' : '' %> >Parfum</option>   
+            <option value="">None</option>       
+        </select>
+       </li> 
+       <li style="margin-right: 10px;">
+        <select class="selectpicker form-control border-0 mb-1 mt-2 px-2 py-2 rounded" id="productSize" name="productSize">
+          <option value="" disabled <%= !productSize ? 'selected' : '' %>>Product Size</option>
+          <option value="small" <%= productSize=='small' ? 'selected' : '' %> >Small</option>
+          <option value="medium" <%= productSize=='medium' ? 'selected' : '' %> >Medium</option>
+          <option value="big" <%= productSize=='big' ? 'selected' : '' %> >Big</option>      
+          <option value="">None</option>    
+      </select>
+     </li> 
+     <li style="margin-right: 10px;">
+      <select class="selectpicker form-control border-0 mb-1 mt-2 px-2 py-2 rounded" id="price" name="price">
+        <option value="" disabled <%= !price ? 'selected' : '' %>>Price Range</option>
+        <option value="belowHundred" <%= price=='belowHundred' ? 'selected' : '' %> >Upto 100</option>
+        <option value="aboveHundred" <%= price=='aboveHundred' ? 'selected' : '' %> >Above 100</option> 
+        <option value="">None</option>   
+    </select>
+   </li> 
+          <li class="nav-item">
+            <a class="nav-link"
+              ><button type="submit" class="btn btn-dark">Filter</button></a
+            >
+          </li>
+        </ul>
+        <!-- Left links -->
+      </div>
+      <!-- Collapsible wrapper -->
+    </div>
+    <!-- Container wrapper -->
+  </form>
+  </section>
+  

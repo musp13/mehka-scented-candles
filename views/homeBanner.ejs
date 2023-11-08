@@ -1,0 +1,239 @@
+<!--Template Name: vacayhome
+File Name: home.html
+Author Name: ThemeVault
+Author URI: http://www.themevault.net/
+License URI: http://www.themevault.net/license/-->
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="icon" href="images/icons/favicon.png"/>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <title>mehka</title>
+
+        <!-- Bootstrap core CSS -->
+        <link href="css/bootstrap.min.css" rel="stylesheet">
+        <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+        <!-- Custom styles for this template -->
+        <link href="css/style.css" rel="stylesheet">
+        <link href="fonts/antonio-exotic/stylesheet.css" rel="stylesheet">
+        <link rel="stylesheet" href="css/lightbox.min.css">
+        <link href="css/responsive.css" rel="stylesheet">
+        <script src="js/jquery.min.js" type="text/javascript"></script>
+        <script src="js/bootstrap.min.js" type="text/javascript"></script>
+        <script src="js/lightbox-plus-jquery.min.js" type="text/javascript"></script>
+        <script src="js/instafeed.min.js" type="text/javascript"></script>
+        <script src="js/custom.js" type="text/javascript"></script>
+    </head>
+    <body style="background-color: #F9F5EA;">
+        <div id="page">
+            <!---header top---->
+            <div class="top-header">
+                <div class="container">
+                    <div class="row">
+                        
+                        <div class="col-md-12">
+                            <div class="social-grid">
+                                <ul class="list-unstyled text-center" style="color: white;">
+                                    FREE Shipping On All Orders. &#x1F389;
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--header--->
+            <header class="header-container">
+                <div class="container">
+                    <div class="top-row">
+                        <div class="row">
+                            <div class="col-md-2 col-sm-6 col-xs-6">
+                                <div id="logo">
+                                    <!--<a href="index.html"><img src="images/logo.png" alt="logo"></a>-->
+                                    <a href="/homeBanner"><span>meh</span>ka</a>
+                                </div>                       
+                            </div>
+                            <div class="col-sm-6 visible-sm">
+                                <div class="text-right"><button type="button" class="book-now-btn">Book Now</button></div>
+                            </div>
+                            <div class="col-md-8 col-sm-12 col-xs-12 remove-padd">
+                                <nav class="navbar navbar-default">
+                                    <div class="navbar-header page-scroll">
+                                        <button data-target=".navbar-ex1-collapse" data-toggle="collapse" class="navbar-toggle" type="button">
+                                            <span class="sr-only">Toggle navigation</span>
+                                            <span class="icon-bar"></span>
+                                            <span class="icon-bar"></span>
+                                            <span class="icon-bar"></span>
+                                        </button>
+
+                                    </div>
+                                    <div class="collapse navigation navbar-collapse navbar-ex1-collapse remove-space">
+                                        <ul class="list-unstyled nav1 cl-effect-10">
+                                            <li><a  data-hover="Home" class="active"><span>Home</span></a></li>
+                                            <li><a data-hover="Products"  href="/userProductList"><span>Products</span></a></li>
+                                            
+                                        </ul>
+
+                                    </div>
+                                </nav>
+                            </div>
+                            <div class="col-md-2  col-sm-4 col-xs-12 hidden-sm">
+                                <div class="text-right"><button onclick="window.location.href='/login'" type="button" class="book-now-btn">Log In</button></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+
+            <!--end-->
+            <div id="myCarousel1" class="carousel slide" data-ride="carousel"> 
+                <!-- Indicators -->
+                
+                <ol class="carousel-indicators">
+                    <!-- <li data-target="#myCarousel1" data-slide-to="0" class="active"></li>
+                    <% for(let i=1;i<banners.length;i++){  %>
+                    <li data-target="#myCarousel1" data-slide-to="1"></li> -->
+                    <!-- <li data-target="#myCarousel1" data-slide-to="2"></li> -->
+                    <!-- <%}%> -->
+                    <% banners.forEach((banner, index) => { %>
+                        <li data-target="#myCarousel1" data-slide-to="<%= index %>" class="<%= index === 0 ? 'active' : '' %>"></li>
+                    <% }) %>   
+                </ol>
+                <!-- <div class="carousel-inner"> -->
+                    <!-- <div class="item active"> <img src="images/banners/cropped/daniel-andrade-1sL5MMDynd4-unsplash.jpg" style="width:100%; height: 500px" alt="First slide">
+                        <div class="carousel-caption">
+                            <h1>mehka<br> Scented Candles</h1>
+                        </div>
+                    </div>
+                    <div class="item"> <img src="images/banners/ellie-ellien-QzNIr1ORRAU-unsplash.jpg" style="width:100%; height: 500px" alt="Second slide">
+                        <div class="carousel-caption">
+                            <h1>mehka<br> Scented Candles</h1>
+                        </div>
+                    </div>
+                    <div class="item"> <img src="images/banners/cropped/content-pixie-VJX5imdELxo-unsplash (1).jpg" style="width:100%; height: 500px" alt="Third slide">
+                        <div class="carousel-caption">
+                            <h1>mehka<br> Scented Candles</h1>
+                        </div>
+                    </div> -->
+                    <!-- --------------looping banners -->
+                    <!-- <% banners.forEach(banner => { %>
+                        <div class="item">
+                            <a href="<%=banner.link%>">
+                                <img src="images/banners/uploaded/<%=banner.image%>" style="width:100%; height: 500px" alt="<%=banner.title%>">
+                            </a>
+                            <div class="carousel-caption">
+                                <h1><%=banner.title%><br> <%=banner.description%></h1>
+                            </div>
+                        </div>
+                    <% }) %> -->
+                    <!-- ---------banner loop ends -->    
+                <!-- </div> -->
+                <div class="carousel-inner">
+                    <% banners.forEach((banner, index) => { %>
+                        <div class="item <%= index === 0 ? 'active' : '' %>">
+                            <a href="<%= banner.link %>"> <!-- Add the link here -->
+                                <img src="images/banners/uploaded/<%= banner.image %>" style="width:100%; height: 500px" alt="<%= banner.title %>">
+                            </a>
+                            <div class="carousel-caption">
+                                <h1><%= banner.title %></h1><br><h4><%= banner.description %></h6>
+                            </div>
+                        </div>
+                    <% }) %>
+                </div>
+                <a class="left carousel-control" href="#myCarousel1" data-slide="prev"> <img src="images/icons/left-arrow.png" onmouseover="this.src = 'images/icons/left-arrow-hover.png'" onmouseout="this.src = 'images/icons/left-arrow.png'" alt="left"></a>
+                <a class="right carousel-control" href="#myCarousel1" data-slide="next"><img src="images/icons/right-arrow.png" onmouseover="this.src = 'images/icons/right-arrow-hover.png'" onmouseout="this.src = 'images/icons/right-arrow.png'" alt="left"></a>
+            </div>
+            <!-- <div class="clearfix"></div>
+                <a class="left carousel-control" href="#myCarousel1" data-slide="prev"> <img src="images/icons/left-arrow.png" onmouseover="this.src = 'images/icons/left-arrow-hover.png'" onmouseout="this.src = 'images/icons/left-arrow.png'" alt="left"></a>
+                <a class="right carousel-control" href="#myCarousel1" data-slide="next"><img src="images/icons/right-arrow.png" onmouseover="this.src = 'images/icons/right-arrow-hover.png'" onmouseout="this.src = 'images/icons/right-arrow.png'" alt="left"></a>
+
+            </div> -->
+            <div class="clearfix"></div>
+
+            <!--service block--->
+            <section class="service-block">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12 col-xs-12 width-50">
+                            <div class="service-details text-center">                               
+                                <h4><a>Shop our popular candle products</a></h4>
+                            </div>
+                        </div>
+                        
+                       
+                        
+                    </div>
+                </div>
+            </section>
+
+            <!--gallery block--->
+            <section class="gallery-block gallery-front">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                            <div class="gallery-image">
+                                <img class="img-responsive" src="images/products/1696336715769_cropped_hanna-balan-sWa3QkvmcUs-unsplash.jpg">
+                                <div class="overlay">
+                                    <a class="info pop example-image-link img-responsive" href="http://localhost:3000/productDetail?product_id=651c0b4b8cc0b42ee08c76eb"><i class="fa fa-search" aria-hidden="true"></i></a>
+                                    <p><a>Orange Lime Light</a></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                            <div class="gallery-image">
+                                <img class="img-responsive" src="images/products/1694842107579_cropped_mediamodifier-N6t3PkMkAMc-unsplash.jpg">
+                                <div class="overlay">
+                                    <a class="info pop example-image-link img-responsive" href="http://localhost:3000/productDetail?product_id=64e41095a49c2486f54ccc36"><i class="fa fa-search" aria-hidden="true"></i></a>
+                                    <p><a>Glowing Vanilla Pillar Candle</a></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                            <div class="gallery-image">
+                                <img class="img-responsive" src="images/products/1695195624718_cropped_svitlana-MKJRng2Cn4I-unsplash (1) - Copy.webp">
+                                <div class="overlay">
+                                    <a class="info pop example-image-link img-responsive" href="http://localhost:3000/productDetail?product_id=64e306c2a61993efda224a10"><i class="fa fa-search" aria-hidden="true"></i></a>
+                                    <p><a>Lavender Bliss Candle</a></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                            <div class="gallery-image">
+                                <img class="img-responsive" src="images//products/1695195625047_cropped_no-revisions-CU8ujrbkvCM-unsplash (2).webp">
+                                <div class="overlay">
+                                    <a class="info pop example-image-link img-responsive" href="http://localhost:3000/productDetail?product_id=64e41095a49c2486f54ccc3e"><i class="fa fa-search" aria-hidden="true"></i></a>
+                                    <p><a>Enchanted Forest Pillar Candle</a></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            
+
+            
+            
+            
+            <!---footer--->
+            <footer>
+                <div class="container">
+                    <div class="copyright">
+                        &copy; Designed by <a href="#" target="_blank">musfirabadriya@gmail.com</a>
+                    </div>
+                </div>
+            </footer>
+
+            <!--back to top--->
+            <a style="display: none;" href="javascript:void(0);" class="scrollTop back-to-top" id="back-to-top">
+                <span><i aria-hidden="true" class="fa fa-angle-up fa-lg"></i></span>
+                <span>Top</span>
+            </a>
+
+        </div>
+    </body>
+</html>

@@ -1,0 +1,224 @@
+
+<%- include('includes/admin-head-end') %>
+<%- include('includes/admin-side-pane') %>
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- DataTables CSS -->
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
+
+<!-- DataTables JavaScript -->
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
+
+
+<!-- <%=users %> -->
+<% const options = { year: '2-digit', month: '2-digit', day: '2-digit' }; %>
+<center>
+    <div class="row  " style="height: 50vh;margin-left: 7vw;">
+        <div class="col-md-1"></div>
+        <div class="col-md-11  " >
+            <span style="font-size: 20px; margin-bottom: 10rem;" class=" ">
+                <br>
+                <center><h1><b>User Details</b></h1></center>
+                <br>
+            </span>
+                <table style="margin-left:5px;" class=" "><!--  -->
+                    <tr>
+                        <td colspan="5">
+                            <form action="/admin/adminSearchUser" method="post"><!--  onsubmit="return validateEmailSearch()"  -->
+                                <div class="form-outline mb-4" style="display: flex;" >    
+                                    <label class="form-label" for="email" style="width: 170px;margin-top: 6px;">Email address</label>
+                                    <input type="email" id="email" name="email" class="form-control" required style="height:40px"/>
+                                    <button type="submit" class="btn btn-dark btn-block " style="margin-left: 20px;height: 40px;width:200px;">Search User</button>
+                                    
+                                </div>
+                                <center><span id="emailError" style="color:red"></span></center>
+                                
+                            </form>
+                            
+            
+            <br>
+            <center class="table-responsive bg-white">
+                <table class="table mb-0" style="background-color: white;border-radius: 10px;box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
+                    <thead class="even-columns">
+                        <tr style="height: 70px; align-items: center;padding-bottom: 50px;">
+                            <th>Full Name</th>
+                            <th>Email</th>
+                            <th>Verified?</th>
+                            <th>Phone</th>
+                            <th>Birth Day</th>
+                            <th>Gender</th>
+                            <!-- <th>Address</th> -->
+                            <th>Pin</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <% if(users.length>0){ %>
+                        <% for(let i=0; i < users.length; i++) { %>
+                            <tbody>
+                                <tr>
+                                    <td> <%= users[i].fullName %> </td>
+                                    <td> <%= users[i].email %> </td>
+                                    <td> <%= users[i].isVerified ? 'Yes' : 'No' %></td>
+                                    <td> <%= users[i].Phone %> </td>
+                                    <td> <% if(users[i].birthday){  %>
+                                        <%= users[i].birthday.toLocaleDateString('en-GB', options) %> 
+                                        <% } %>
+                                    </td>
+                                    <td> <%= users[i].gender %> </td>
+                                    
+                                    <td> <%= users[i].pin %> </td>
+                                    <td>                                       
+                                        
+                                        <button class="btn blue-button block-unblock-btn" data-user-id="<%= users[i]._id %>">
+                                            <%= users[i].isBlocked ? 'Unblock' : 'Block' %>
+                                        </button>
+                                        <button class="btn purple-button" data-user-id="<%= users[i]._id %>"
+                                            onclick="window.location.href='/admin/expandUserDetails?userId=<%= users[i]._id %>'">
+                                            Expand
+                                        </button>
+                                    </td>                            
+                                </tr>
+                                
+                            <% } %>                  
+                        <% }else{ %>
+                        
+                            <tr>
+                                <td colspan="2">Users Not Found</td>
+                            </tr>
+                        <% } %>
+                    </tbody>
+                    
+                </table>
+            </center>
+            
+           
+        </div>
+        <div class="col-md-1"></div>
+    </div>
+</center>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    /* function validateEmailSearch() {
+        const email = $('#email').val();
+        const users = '<%= JSON.stringify(users) %>'; // Get users from server-side data
+
+        // Validate email format
+        const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+        if (!emailPattern.test(email)) {
+            $('#emailError').text('Invalid email format');
+            return false; // Prevent form submission
+        }
+
+        // Check if email exists in users list
+        if (!users.find(user => user.email === email)) {
+            $('#emailError').text('User not found');
+            return false; // Prevent form submission
+        }
+
+        return true; // Allow form submission if email is valid and exists
+    } */
+    $(document).ready(function() {
+        
+        // Attach an event handler to the form's submit event
+        $('form').on('submit', function(event) {
+        event.preventDefault(); // Prevent the form from submitting by default
+
+        let validated = true;
+
+        // Your validation logic here
+        const email = $('#email').val();
+        const usersJSON = '<%- JSON.stringify(users) %>';
+        const usersArray = JSON.parse(usersJSON);
+
+        // Validate email format
+        const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+        if (!emailPattern.test(email)) {
+            $('#emailError').text('Invalid email format');
+            return; // Prevent form submission
+        }
+
+        // Check if email exists in users list
+        const userFound = usersArray.find((user) => user.email === email);
+
+        // Check if email exists in users list
+        if (!userFound) {
+            $('#emailError').text('User not found');
+            return; // Prevent form submission
+        }
+        else{
+            var foundUserId = userFound._id;
+        }
+
+        // ... other validation checks ...
+
+        
+            // Submit the form via AJAX
+            $.ajax({
+                type: 'POST',
+                url: '/admin/adminSearchUser', // Replace with the correct URL
+                data: { email },
+                success: function(response) {
+                    // Handle the response from the server
+                    //console.log(response);
+
+                    // Redirect to another page or update the UI as needed
+                    window.location.href = `/admin/expandUserDetails?userId=${foundUserId}`;
+                },
+                error: function(error) {
+                    // Handle any errors that occur during the AJAX request
+                    console.error(error);
+                }
+            });
+        
+    });
+
+        /* // Attach a click event handler to the block/unblock buttons
+        $('.block-unblock-btn').on('click', function() { */
+        // Replace previous button event handling code with this delegation approach.
+        $('.table').on('click', '.block-unblock-btn', function() {
+            console.log('block-unblock button clicked');
+            const button = $(this); // Store a reference to the button clicked
+            const userId = button.data('user-id');
+            const action = button.text().toLowerCase();
+
+            Swal.fire({
+                title: `Are you sure you want to ${action} this user?`,
+                text: `This action cannot be undone.`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        type: 'POST',
+                        url: '/admin/block_user',
+                        data: { userId },
+                        success: function(response) {
+                            //console.log(response);
+                            if (action === 'block') {
+                                button.text('Unblock');
+                                
+                            } else {
+                                button.text('Block');
+                            }
+                            // Reload the page
+                            //location.reload();
+                        },
+                        error: function(error) {
+                            //console.error(error);
+                        }
+                    });
+                }
+            });
+        });
+
+    });
+</script>
+
+
+<%- include('includes/tail-end') %>

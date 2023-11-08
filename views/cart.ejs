@@ -1,0 +1,453 @@
+<%- include('includes/user-detail-head-end') %>
+<% cartLength = user.cart.length  %>
+
+<input type="hidden" id="global-user-data" value="<%=user%>">
+<section class="h-100 gradient-custom" style="min-height: 82vh;">
+  <div class="container py-5">
+    <div class="row d-flex justify-content-center my-4">
+      <div class="col-md-8">
+        <div class="card mb-4">
+          <div class="card-header py-3" style="background-color: #f9f5ea">
+          <h5 class="mb-0">Cart - <span id="cartCount"><%= cartLength %></span> items</h5>
+          </div>
+          <!-- ----------------new code-------------------------------------- -->
+          <div id="cartEmptyMsg">
+            <% if(cartLength<1) { %>
+              <center><img src="/images/empty_cart8.png" alt=""></center>
+              <% } %>
+          </div>
+          
+          <!-- Loop through the cart items -->
+          <% for (const cartItem of user.cart) { %>
+           <!--  <%=cartItem%> -->
+          <div class="card-body cart-item" data-cart-item-id="<%= cartItem._id %>">      <!--  .cart-item[data-cart-item-id="${cartItemId}"]` -->
+            <div class="row">
+              <div class="col-lg-3 col-md-12 mb-4 mb-lg-0">
+                <!-- Image -->
+                <div
+                  class="bg-image hover-overlay hover-zoom ripple rounded"
+                  data-mdb-ripple-color="light"
+                >
+                  <a href="productDetail?product_id=<%=cartItem.productId._id%>">
+                    <img
+                      src="images/Products/<%= cartItem.productId.mainImage %>"
+                      class="w-100"
+                      alt="<%= cartItem.productId.name %>"
+                    />
+                  </a>
+                  <a href="productDetail?product_id=<%=cartItem.productId._id%>">
+                    <div
+                      class="mask"
+                      style="background-color: rgba(251, 251, 251, 0.2)"
+                    ></div>
+                  </a>
+                </div>
+                <!-- Image -->
+              </div>
+
+              <div class="col-lg-5 col-md-6 mb-4 mb-lg-0">
+                <!-- Data -->
+                <!-- Product details -->
+                <p><strong><%= cartItem.productId.name %></strong></p>
+                <!-- <p>Color: <%= cartItem.productId.color %></p> -->
+                <p style="margin-bottom: 15px;margin-top: 10px;">Size: <%= cartItem.productId.productSize %></p>
+                <button
+                  type="button"
+                  class="btn btn-danger btn-sm me-1 mb-2 cart-trash-btn"
+                  data-mdb-toggle="tooltip"
+                  title="Remove item"
+                  data-cart-item-id="<%= cartItem._id %>"
+                >
+                  <i class="fas fa-trash"></i>
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-danger btn-sm mb-2 cart-fav-btn"
+                  data-mdb-toggle="tooltip"
+                  title="Move to the wish list"
+                  data-product-id="<%= cartItem.productId._id %>"
+                >
+                  <i class="fas fa-heart"></i>
+                </button>
+                <br>
+                <span id="productError" style="color: brown;">
+                  <% const product = cartItem.productId; %>
+                  <% const categoryId = product.category; %>
+                  <!-- <%= product.category %> -->
+                 <!--  <% const categoryVisible = nonHiddenCategoryIds.filter((x)=> x==(cartItem.productId.category)); %>
+                -->   
+                <% if (cartItem.quantity > product.stockLeft) { %>
+                  Low Stock. Only <%= cartItem.productId.stockLeft %> Left.
+              <% } else if (product.stockLeft < 1) { %>
+                  Out of Stock
+              <% } else if (product.isDeleted) { %>
+                  This Item is Removed
+              <% } else if (product.category.hidden) { %>
+                  This Item is Invisible
+              <% } %>
+                   
+
+                    
+                </span>
+                <!-- Data -->
+              </div>
+
+              <div class="col-lg-4 col-md-6 mb-4 mb-lg-0">
+                <!-- Quantity -->
+                <!-- Quantity controls -->
+                <div class="d-flex mb-4" style="max-width: 300px; height: 35px">
+                  <button
+                    class="btn btn-dark px-3 me-2 qt-btn decrement"
+                    data-cart-item-id="<%= cartItem._id %>"
+                  >  <!-- onclick="decrementQuantity('<%= cartItem._id %>')" -->
+                    <i class="fas fa-minus"></i>
+                  </button>
+                  <div class="form-outline">
+                    <input
+                      id="form<%= cartItem._id %>"
+                      min="1"
+                      name="quantity"
+                      value="<%= cartItem.quantity %>"
+                      type="number"
+                      class="form-control"
+                      style="height: 35px"
+                      disabled
+                    />
+                    <label class="form-label" for="form<%= cartItem._id %>"
+                      >Quantity</label
+                    >
+                  </div>
+                  <button
+                    class="btn btn-dark px-3 ms-2 qt-btn increment"
+                    data-cart-item-id="<%= cartItem._id %>"
+                    data-max-stock="<%= cartItem.productId.stockLeft %>"                    
+                  >  <!-- onclick="incrementQuantity('<%= cartItem._id %>', '<%= cartItem.productId.stockLeft %>')" -->
+                    <i class="fas fa-plus"></i>
+                  </button>
+                </div>
+                <!-- Quantity -->
+                <!-- Price -->
+                <!-- Calculate the discounted price: -->
+                <% 
+                  // Calculate the discounted price based on the discount percentage
+                  const discountPercentage = cartItem.productId.discount || 0; // Default to 0 if no discount
+                  const discountedPrice = cartItem.productId.price * (1 - discountPercentage / 100);
+                %>
+
+                <!-- Multiply the discounted price by the selected quantity: -->
+                <%
+                  // Calculate the total price based on quantity
+                  const totalPrice = discountedPrice * cartItem.quantity;
+                %>
+
+                <!-- Display the total price -->
+                <input type="hidden" id="price<%= cartItem._id %>" value="<%= cartItem.productId.price %>">
+                <input type="hidden" id="discount<%= cartItem._id %>" value="<%= cartItem.productId.discount %>">
+                <p class="text-start text-md-center" style="margin-top: 40px;">
+                  <strike
+                    >&#8377;<%= cartItem.productId.price %></strike
+                  >
+                  <br>
+                  <strong id="itemTotalPrice<%= cartItem._id %>"
+                    >&#8377;<%= totalPrice.toFixed(2) %></strong
+                  >
+                </p>
+                <!-- Price -->
+              </div>
+
+              <!-- Single item -->
+              <hr class="my-4" style="width: 93%;margin-left: 10px;" />
+            </div>
+          </div>
+          <% } %>    
+        </div>
+
+        
+        <div class="card mb-4">
+          <div class="card-body">
+            <p><strong>Expected shipping delivery</strong></p>
+            <p class="mb-0" id="shipping-date-range"></p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card mb-4">
+          <div class="card-header py-3" style="background-color: #f9f5ea">
+            <h5 class="mb-0">Summary</h5>
+          </div>
+          <div class="card-body">
+            <ul class="list-group list-group-flush">
+              <li
+                class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0"
+              >
+                Products
+                <span id="summaryTotalPrice">&#8377;<%= totalPrice.toFixed(2) %></span>
+              </li>
+              <li
+                class="list-group-item d-flex justify-content-between align-items-center px-0"
+              >
+                Shipping
+                <span>Gratis</span>
+              </li>
+              <li
+                class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3"
+              >
+                <div>
+                  <strong>Total amount</strong>
+                  <strong>
+                    <p class="mb-0">(including VAT)</p>
+                  </strong>
+                </div>
+                <span id="final-amount"><strong>&#8377;<%= totalPrice.toFixed(2) %></strong></span>
+              </li>
+            </ul>
+
+            <center><span id="cartError" style="color: brown;">
+              <% if(typeof invalidCart !== 'undefined') { %>
+              Delete Invalid Items from Cart
+              <% } %>
+            </span>
+            </center>
+            <button
+              id="checkoutBtn"
+              type="button"
+              class="btn btn-dark btn-lg btn-block"
+              style="border: none"
+              onclick="location.href='/load-checkout'" 
+              <% if(user.cart.length <= 0){ %>
+                disabled
+                <% } %>
+            >
+              <!-- rgb(172, 110, 110) -->
+              Go to checkout
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Include SweetAlert JS -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.12.5/dist/sweetalert2.all.min.js"></script>
+<!-- JavaScript functions for quantity control -->
+<script>
+  // Get the current date
+  const currentDate = new Date();
+
+  // Calculate the delivery date 4 to 5 days from today
+  const deliveryDate = new Date();
+  deliveryDate.setDate(currentDate.getDate()+4);// 4 days from today
+  const endDate = new Date();
+  endDate.setDate(currentDate.getDate()+5); // 5 day sfrom today
+
+  // Format dates as "DD.MM.YY"
+  const formattedDeliveryDate = `${deliveryDate.getDate()}.${deliveryDate.getMonth()+1}.${deliveryDate.getFullYear()}`;
+  const formattedEndDate = `${endDate.getDate()}.${endDate.getMonth()+1}.${endDate.getFullYear()}`;
+
+  // Display the date range in the HTML element
+  document.getElementById('shipping-date-range').textContent = `${formattedDeliveryDate} - ${formattedEndDate}`;
+</script>
+<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+
+<script>
+
+  let cartLength = parseInt('<%=cartLength%>');
+  $(document).ready(function () {
+
+    // Define a global array to store cart items
+    let cartItems = [];
+
+    // Function to populate the cart items array
+    function populateCartItems() {
+      <% for (const cartItem of user.cart) { %>
+        const cartItemData<%= cartItem._id %> = {
+          id: '<%= cartItem._id %>',
+          price: <%= cartItem.productId.price %>,
+          discount: <%= cartItem.productId.discount %>,
+          quantity: <%= cartItem.quantity %>,
+        };
+        cartItems.push(cartItemData<%= cartItem._id %>);
+      <% } %>
+    }
+    // Increment button click handler
+    $('.increment').on('click', function () {
+      const cartItemId = $(this).data('cart-item-id');
+      const maxStock = $(this).data('max-stock');
+      const inputElement = $(`#form${cartItemId}`);
+      const currentValue = parseInt(inputElement.val(), 10);
+      if (currentValue < maxStock) {
+        inputElement.val(currentValue + 1);
+        // Make an AJAX request to update the quantity in the database
+        updateQuantity(cartItemId, currentValue + 1);
+        // Update the total price display
+        /* updateTotalPrice(cartItemId); */
+        // Update the total summary price to display
+        //calculateTotalPrice();
+      }
+    });
+
+    // Decrement button click handler
+    $('.decrement').on('click', function () {
+      const cartItemId = $(this).data('cart-item-id');
+      const inputElement = $(`#form${cartItemId}`);
+      const currentValue = parseInt(inputElement.val(), 10);
+      if (currentValue > 1) {
+        inputElement.val(currentValue - 1);
+        // Make an AJAX request to update the quantity in the database
+        updateQuantity(cartItemId, currentValue - 1);
+        // Update the total price display
+        /* updateTotalPrice(cartItemId); */
+        // Update the total summary price to display
+        //calculateTotalPrice();
+      }
+    });
+
+    // Function to update quantity in the database using AJAX
+    function updateQuantity(cartItemId, newQuantity) {
+      $.ajax({
+        url: `/update-cart-item-quantity/<%=user._id%>/${cartItemId}`, // Replace with your server endpoint
+        method: 'POST', // Use POST or PUT based on your API design
+        data: { quantity: newQuantity },
+        success: function (response) {
+          // Handle success, e.g., update the total price if needed
+          const totalProductPrice = response.totalProductPrice; 
+          $(`#itemTotalPrice${cartItemId}`).html(`<strong>&#8377;${totalProductPrice.toFixed(2)}</strong>`);
+          // Update the total price display here
+          //updateTotalPrice(cartItemId);
+          // Update the total price display here
+          //calculateTotalPrice();
+          const cartSummaryPrice= response.cartSummaryPrice;
+          $('#summaryTotalPrice').html(`<strong>&#8377;${cartSummaryPrice.toFixed(2)}</strong>`);
+        $('#final-amount').html(`<strong>&#8377;${cartSummaryPrice.toFixed(2)}</strong>`);
+        },
+        error: function (error) {
+          console.error('Error:', error);
+        }
+      });
+    }
+
+    // Function to update the total price display
+    function updateTotalPrice(cartItemId) {
+      
+      /* const cartItem = cartItems.find((item) => item.id === cartItemId);
+      if (cartItem) {
+        const totalDiscountedPrice = (cartItem.price - cartItem.price * (cartItem.discount / 100)) * cartItem.quantity;
+        $(`#itemTotalPrice${cartItemId}`).html(`<strong>&#8377;${totalDiscountedPrice.toFixed(2)}</strong>`);
+      } */
+      const userId = '<%= user._id %>';
+
+    }
+
+    //Create a new function to calculate the total price of all items in the cart
+    // Function to calculate the total price of all items in the cart
+    /* function calculateTotalPrice() {
+      let totalPrice = 0;
+
+        for (const cartItem of cartItems) {
+          const totalDiscountedPrice = (cartItem.price - cartItem.price * (cartItem.discount / 100)) * cartItem.quantity;
+          totalPrice += totalDiscountedPrice;
+        }
+        if (cartLength == 0) {
+          totalPrice = 0;
+        }
+        $('#summaryTotalPrice').html(`<strong>&#8377;${totalPrice.toFixed(2)}</strong>`);
+        $('#final-amount').html(`<strong>&#8377;${totalPrice.toFixed(2)}</strong>`);    
+    } */
+    
+    // Initialize total price on page load
+    //calculateTotalPrice();
+
+    // Delete button click handler
+    $('.cart-trash-btn').on('click', function () {
+      const cartItemId = $(this).data('cart-item-id');
+
+      // Display a confirmation prompt using SweetAlert
+      Swal.fire({
+        title: 'Remove Item from Cart',
+        text: 'Are you sure you want to remove this item from your cart?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, remove it!',
+        cancelButtonText: 'No, keep it'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          // User clicked "Yes," proceed to remove the item
+      
+          // Make an AJAX request to remove the item from the cart
+          removeCartItem(cartItemId);
+          cartLength--;
+          document.getElementById('cartError').textContent = '';
+          if(cartLength == 0)
+          {
+              document.getElementById('checkoutBtn').disabled = true;
+              document.getElementById('cartEmptyMsg').innerHTML = 
+                            `<center><img src="/images/empty_cart8.png" alt=""></center>`;
+          }
+                
+
+          // Remove the corresponding cart item element from the UI
+          $(`.cart-item[data-cart-item-id="${cartItemId}"]`).remove();
+          document.getElementById('cartCount').textContent = cartLength;
+
+          /* // Calculate the total price again after removing the item
+          calculateTotalPrice(); */
+        }
+      });
+    });
+
+    // Function to remove the item from the cart using AJAX
+    function removeCartItem(cartItemId) {
+      $.ajax({
+        url: `/remove-cart-item/<%=user._id%>/${cartItemId}`, // Replace with your server endpoint
+        method: 'DELETE', // Use DELETE HTTP method to remove the item
+        success: function (response) {
+          // Handle success, e.g., update the UI to reflect the removal
+          // You may need to refresh the cart or update the displayed items
+          // based on the response from the server.
+          // For example, you can remove the deleted item from the UI.
+          // Reload the page or update the cart contents accordingly.
+          totalPrice=response.totalPrice;
+          const cartSummaryPrice= response.cartSummaryPrice;
+          console.log('total price: ',response.totalPrice);
+          // Update the total price in the summary section
+          $('#summaryTotalPrice').html(`<strong>&#8377;${cartSummaryPrice.toFixed(2)}</strong>`);
+          
+          $('#final-amount').html(`<strong>&#8377;${cartSummaryPrice.toFixed(2)}</strong>`);
+
+        },
+        error: function (error) {
+          console.error('Error:', error);
+        }
+      });
+    }
+    $(".cart-fav-btn").click(function(){
+
+      //Get the product Id from the data-product-id attribute
+      const productId = $(this).data("product-id");
+      const userId = '<%=user._id%>';
+      console.log('productId:',productId);
+      console.log('userId:',userId);
+
+      $.ajax({
+        type: "POST",
+        url: `/add-to-favorites/${userId}/${productId}`,
+        dataType: "json",
+        success: function(response){
+          //alert(response.message);
+          swal({
+            title:response.message,
+            icon:"success",
+            timer: 1000,
+            /* buttons: false, */
+          });
+        }
+      })
+    })
+  });
+
+
+  
+</script>
+
+<%- include('includes/tail-end') %>

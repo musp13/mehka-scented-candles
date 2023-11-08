@@ -1,0 +1,164 @@
+<%- include('includes/user-head-end') %>
+
+<%- include('includes/user-filter-bar') %>
+
+<section style="background-color: #F9F5EA;">
+  <div class="container py-5">
+    <div class="row">
+      <% products.forEach(product => { %>
+        <div class="col-md-6 col-lg-4 col-xl-3">
+          <div class="card mb-4" style="background-color: #F9F5EA;height: 70vh;">
+            <a href="/productDetail?product_id=<%=product._id%>">
+              <img src="/images/products/<%=product.mainImage%>" class="card-img-top" alt="<%= product.name %>">
+            </a>
+            <div class="card-body" style="height: 100px;"> <!-- Fixed height for the card body -->
+              <h5 class="card-title text-black" style="font-family: 'Oswald', sans-serif;color:rgba(0, 0, 0, 0.062)"><%= product.name %></h5> <!-- Updated to use text-black -->
+              <p class="card-text text-muted">&#8377;<%= product.price %></p>
+            </div>
+            <div class="card-footer" style="background-color:#F9F5EA;">
+              <ul class="list-inline text-center">
+                <li class="list-inline-item">
+                  <button class="btn btn-outline-black add-to-cart-button" data-product-id="<%= product._id %>">
+                    <i class="fas fa-shopping-cart"></i>
+                  </button>
+                </li>
+                <li class="list-inline-item">
+                  <button class="btn btn-outline-black add-to-favorites-button" data-product-id="<%= product._id %>">
+                    <i class="fas fa-heart"></i>
+                  </button>
+                </li>
+                <!-- <li class="list-inline-item">
+                  <a href="#" class="btn btn-outline-black"> <!-- Updated to use btn-outline-black -->
+                 <!--   <i class="fas fa-plus"></i>
+                  </a>
+                </li> -->
+                <li class="list-inline-item">
+                  <a href="productDetail?product_id=<%=product._id%>" class="btn btn-outline-black"> <!-- Updated to use btn-outline-black -->
+                    <i class="fas fa-expand"></i>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      <% }); %>
+      <% if(products.length==0){ %>
+        <center style="margin-top: 19vh;font-size:25px">
+        <!-- <h2> -->
+          <i class="fa-solid fa-circle-exclamation"></i><i class="fa-solid fa-box-open"></i>
+        <br>
+        <b>No Products to display.</b>
+      <!-- </h2> -->
+      </center>
+      <% } %>
+      
+    </div>
+  </div>
+</section>
+
+<style>
+  .pagination .page-item.active .page-link {
+  background-color: black; /* Change to the desired background color */
+  color: white !important; /* Change to the desired text color */
+}
+</style>
+<div class="text-center mb-5">
+  <nav aria-label="Pagination">
+    <ul class="pagination justify-content-center">
+      <% if (currentPage > 1) { %>
+        <li class="page-item">
+          <a class="page-link text-black" href="?page=<%= previousPage %>&search=<%=search%>&sort=<%=sort%>&price=<%=price%>&productSize=<%=productSize%>&aromaType=<%=aromaType%>&aromaLevel=<%=aromaLevel%>">Prev</a> <!-- Updated to use text-black -->
+        </li>
+      <% } %>
+      <% for (let j = 1; j <= totalPages; j++) { %>
+        <li class="page-item <%= currentPage == j ? 'active' : '' %>">
+          <a class="page-link text-black" href="?page=<%= j %>&search=<%=search%>&sort=<%=sort%>&price=<%=price%>&productSize=<%=productSize%>&aromaType=<%=aromaType%>&aromaLevel=<%=aromaLevel%>"><%= j %></a> <!-- Updated to use text-black -->
+          <!-- <a class="page-link <%= currentPage === j ? 'selected-page' : 'text-black' %>" href="?page=<%= j %>"><%= j %></a> -->
+        </li>
+      <% } %>
+      <% if (currentPage < totalPages) { %>
+        <li class="page-item">
+          <a class="page-link text-black" href="?page=<%= nextPage %>&search=<%=search%>&sort=<%=sort%>&price=<%=price%>&productSize=<%=productSize%>&aromaType=<%=aromaType%>&aromaLevel=<%=aromaLevel%>">Next</a> <!-- Updated to use text-black -->
+        </li>
+      <% } %>
+    </ul>
+  </nav>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+<script src=
+"https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.0/sweetalert.min.js">
+</script>
+<script>
+  $(document).ready(function() {
+  // Function to handle the "Add to Cart" AJAX request
+  $(".add-to-cart-button").click(function() {
+    const productId = $(this).data("product-id");
+    const userId = '<%= userId %>'; // Replace with the actual user ID
+
+    $.ajax({
+      type: 'POST',
+      url: '/addToCart',
+      data: { userId, productId },
+      success: function(response) {
+        swal({
+          title: response.message,
+          icon: "success",
+          timer: 1000,
+        });
+      },
+      error: function(error) {
+        console.error(error);
+      },
+    });
+  });
+
+  // Function to handle the "Add to Favorites" AJAX request
+  $(".add-to-favorites-button").click(function() {
+    const productId = $(this).data("product-id");
+    const userId = '<%= userId %>'; // Replace with the actual user ID
+
+    $.ajax({
+      type: "POST",
+      url: `/add-to-favorites/${userId}/${productId}`,
+      dataType: "json",
+      success: function(response) {
+        if(response.alreadyInFavorites)
+        {
+          //swal('Already in Favorites', 'This item is already in your favorites', 'warning');
+          /* swal({
+            title: "Already in Favorites!",
+            text: "This item is already in your favorites.",
+            icon: 'warning',
+            timer: 1000
+          }); */
+          swal({
+            title: "Added to Favorites!",
+            text: "Item has been added to your favorites.",
+            icon: 'success',
+            timer: 1000
+          });
+          
+        }
+        else if (response.addedToFavorites)
+        {
+          //swal('Added to Favorites', 'Item has been added to your favorites', 'success');
+          swal({
+            title: "Added to Favorites!",
+            text: "Item has been added to your favorites.",
+            icon: 'success',
+            timer: 1000
+          });
+        }
+        
+      },
+      error: function(xhr, status, error) {
+        console.error("Failed to add product to favorites:", error);
+      },
+    });
+  });
+});
+
+</script>
+
+<%- include('includes/tail-end') %>

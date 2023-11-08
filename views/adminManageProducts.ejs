@@ -1,0 +1,160 @@
+
+<%- include('includes/admin-head-end') %>
+<%- include('includes/admin-side-pane') %>
+
+
+
+
+
+<% const options = { year: '2-digit', month: '2-digit', day: '2-digit' }; %>
+<center style="margin-left: 10vw;margin-right: 3vw;">
+    <div class="row  " style="height: 50vh;">
+        <!-- <div class="col-md-"></div> -->
+        <div class="col-md-12  " >
+            <span style="font-size: 20px; margin-bottom: 10rem;" class=" ">
+                <br>
+                <center><h1><b>Manage Products</b></h1></center>
+                <br>
+            </span>
+               
+                <center>
+                <table style="margin-left: 200px;">
+                        <tr>    
+                            <center>
+                                <td width="40%"><a href="/admin/addNewProductLoad"><button type="button" class="btn btn-dark">Add New Product</button></a>
+                            </center>
+                            
+                        </tr>
+                    </table>
+                </center>
+                
+            
+            <br>
+            <center style="margin-left: 8vw;">
+                <div class="table-responsive bg-white">
+                    <table class="table " ><!-- style="width:40vw ;box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);" -->
+                        <thead class="even-columns">
+                            <tr>
+                                <th>Image</th>
+                                <!-- <th>ID</th> -->
+                                <th>Name</th>
+                                <!-- <th>Description</th> -->
+                                <th>Stock Left</th>
+                                <th>Price</th>
+                                <th>Discount</th>
+                                <!-- <th>Added Date</th> -->
+                                <th>Aroma Level</th>
+                                <th>Aroma Type</th>
+                                <th>Product Size</th>
+                                <th>Quantity</th>
+                                <th>Category</th>
+                                <!-- <th>Rating</th> -->
+                                <!-- <th>Reviews</th> -->
+                                <!-- <th>More Description</th> -->
+                                <!-- <th>Ingredients</th> -->
+                                <!-- <th>How to Use</th> -->
+                                <!-- <th>How to Feel</th> -->
+                                <th>Actions</th>
+
+                            </tr>
+                        </thead>
+                        <% if(products.length>0){ %>
+                            <% for(let i=0; i < products.length; i++) { %>
+                                <tbody>
+                                    <tr class="product-row">
+                                        <td><img src="/images/products/<%= products[i].mainImage %>" alt="" style="height: 5rem;"> </td>
+                                        <!-- <td> <%= products[i]._id %> </td> -->
+                                        <td> <%= products[i].name %> </td>
+                                        <!-- <td> <%= products[i].description %> </td> -->
+                                        <!-- <td> <%=// users[i].birthday.toLocaleDateString('en-GB', options) %> </td> -->
+                                        <td> <%= products[i].stockLeft %> </td>
+                                        <td> <%= products[i].price %> </td>
+                                        <td> <%= products[i].discount %></td>
+                                        <!-- <td> <%= products[i].addedDate.toLocaleDateString('en-GB', options) %></td> -->
+                                        <td> <%= products[i].aromaLevel %></td>
+                                        <td> <%= products[i].aromaType %></td>
+                                        <td> <%= products[i].productSize %></td>
+                                        <td> <%= products[i].quantity %></td>
+                                        <td> 
+                                           <!--  <% const category = categories.find(cat=> cat._id.equals(products[i].category)); %>
+                                            <%= category ? category.name : 'Unknown Category' %></td> -->
+                                            <%= products[i].category.name %>
+                                        <td><a href="/admin/adminProductDetail?id=<%= products[i]._id %>"><button class="btn"><i class="fa-regular fa-square-plus"></i></i></button></a>
+                                            <br>
+                                            <a href="/admin/updateProductLoad?id=<%= products[i]._id %>"><button class="btn"><i class="fa-regular fa-pen-to-square"></i></button></a>
+                                            <!-- <a href="/admin/delete_product?id=<%= products[i]._id %>" >Delete</a> -->
+                                            <button class="btn delete-product" data-product-id="<%= products[i]._id %>" style="margin-top: 5px;">
+                                                <i class="fa-solid fa-trash-can"></i>
+                                            </button>
+                                            &emsp13;
+                                        </td>                            
+                                    </tr>
+                                    
+                                <% } %>                  
+                            <% }else{ %>
+                            
+                                <tr>
+                                    <td colspan="20"><center>Products Not Found</center></td>
+                                </tr>
+                            <% } %>
+                        </tbody>
+                        
+                    </table>
+                </div>
+            </center>
+            
+        </div>
+       
+    </div>
+</center>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    $(document).ready(function() {
+        // Attach a click event handler to the delete buttons
+        $('.delete-product').on('click', function() {
+            const productId = $(this).data('product-id');
+            const button = $(this);
+            console.log('button clicked');
+
+            // Display a confirmation dialog
+            swal({
+                title: "Are you sure?",
+                text: "Once deleted, you won't be able to recover this product!",
+                icon: "warning",
+                buttons: ["Cancel", "Delete"],
+                dangerMode: true,
+            }).then((willDelete) => {
+                if (willDelete) {
+                    // Send an AJAX request to delete the product
+                    $.ajax({
+                        type: 'DELETE', // Use the appropriate HTTP method (DELETE in this case)
+                        url: `/admin/delete_product?id=${productId}`,
+                        success: function(response) {
+                            // Handle the success response, remove the product from the UI
+                            button.closest('.product-row').remove();
+                            swal("Product has been deleted!", {
+                                icon: "success",
+                            });
+                        },
+                        error: function(error) {
+                            // Handle any errors that occur during the AJAX request
+                            console.error(error);
+                            swal("An error occurred while deleting the product.", {
+                                icon: "error",
+                            });
+                        }
+                    });
+                } else {
+                    swal("Product is safe!", {
+                        icon: "info",
+                    });
+                }
+            });
+        });
+    });
+</script>
+
+<%- include('includes/tail-end') %>
+

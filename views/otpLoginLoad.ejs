@@ -1,0 +1,57 @@
+<%- include('includes/head-end') %>
+
+<center>
+    <form action="/send_otp" method="post">
+        <div class="card text-center" style="width: 300px;">
+            <div class="card-header h5 text-white bg-dark">OTP Login</div>
+            <div class="card-body px-5">
+                <p class="card-text py-2">
+                    Enter your email address and we'll send you an OTP.
+                </p>
+                <div class="form-outline">
+                    <input type="email" id="email" name="email" class="form-control my-3" required/>
+                    <label class="form-label" for="email">Email input</label>
+                </div>
+                <!-- <a href="#" class="btn btn-primary w-100">Reset password</a> -->
+                <br>
+                <button type="submit" class="btn btn-dark w-100">Send OTP</button>
+                <div style="color: green;">
+                    <% if (typeof message!='undefined'){ %>
+                        <%= message %>
+                    <% } %>
+                </div>
+
+                <div class="d-flex justify-content-between mt-4">
+                    <a class="" href="/login" style="color: black;">Login</a>
+                    <a class="" href="/signup" style="color: black;">Register</a>
+                </div>
+            </div>
+        </div>
+    </form>
+</center>
+
+<!-- <script>
+    const emailInput = document.getElementById('email');
+
+    emailInput.addEventListener("keyup", function(e){
+            if(isValidEmail(emailInput.value))
+            {
+                // Clear any previous error message
+                emailInput.setCustomValidity("");
+            }
+            else{
+                //set a custom validation message
+                emailInput.setCustomValidity("Invalid email format");
+            }
+    });
+
+    //function to check if an email is in valid format
+    function isValidEmail(email)
+    {
+        // Use a regular expression to check the email format
+        const emailPattern = /^[A-Za-z0-9._%-]+[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/;
+        return emailPattern.test(email);
+    }
+</script>
+ -->
+<%- include('includes/tail-end') %>

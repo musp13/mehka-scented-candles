@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Mehka</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Allura&family=Bebas+Neue&family=Mr+Dafoe&family=Pacifico&family=Satisfy&family=Zeyada&display=swap" rel="stylesheet">
+    <!-- font-family: 'Alex Brush', cursive;
+    font-family: 'Allura', cursive;
+    font-family: 'Bebas Neue', sans-serif;
+    font-family: 'Mr Dafoe', cursive;
+    font-family: 'Pacifico', cursive;
+    font-family: 'Satisfy', cursive;
+    font-family: 'Zeyada', cursive; -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <link rel='stylesheet' type='text/css' media='screen' href='/stylesheets/style.css'>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.cdnfonts.com/css/beretta" rel="stylesheet">
+    <link href="https://fonts.cdnfonts.com/css/cm" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Allura&family=Bebas+Neue&family=Mr+Dafoe&family=Oswald:wght@700&family=Pacifico&family=Satisfy&family=Zeyada&display=swap" rel="stylesheet">
+                
+
+
+    <!-- <script src='/javascipts/script.js'></script> -->
+    <script src="https://unpkg.com/js-image-zoom@0.4.1/js-image-zoom.js" type="application/javascript"></script>
+</head> 
+<body style="margin-right: 0;padding-right: 0;">
+    <div id="main-body-container" class="container-fluid" style="padding: 0;margin: 0;right: 0;">
+
+        <div class="row" style="padding: 0;margin: 0;right: 0;margin-right: 0;">
+            <div class="col-12" style="padding: 0;margin: 0;right: 0;margin-right: 0;">
+              <div class="message-rectangle" style="padding: 0;margin: 0;right: 0;margin-right: 0;height: 40px;">
+                <p style="padding: 0;margin: 0;right: 0;margin-right: 0;">FREE Shipping On All Orders. &#x1F389; </p>              
+              </div>
+              <nav class="navbar navbar-expand-lg bg-transparent" style="padding: 0;margin: 0;">
+                <div class="container-fluid" style="padding: 0;margin: 0;">
+                  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                  </button>
+                                <!-- <a class="navbar-brand" href="#">Navbar</a>-->
+                                
+                                
+                                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                                  <ul class="navbar-nav me-auto mb-2 mb-lg-0" style="font-size: smaller;margin-left: 30px;">
+                                    <li class="nav-item">
+                                      <a class="nav-link active" aria-current="page" href="/homeBanner" onmouseover="this.style.color='#db96a8'"
+                                      onmouseout="this.style.color='black'">HOME</a>
+                                    </li>
+                                    <li class="nav-item">
+                                      <a class="nav-link active" aria-current="page" href="/userProductList">PRODUCTS</a>
+                                    </li>
+                                  </ul>
+                  <span id="logo-text" class="logo-font" style="margin-left: 13vw;">mehka</span>
+                  <a class="nav-link fav-icon" href="/userProfile" style="margin-right: 20px;">
+                    <i class="fa-solid fa-user"></i>
+                  </a>
+                  <a class="nav-link fav-icon" href="/load-favorites" style="margin-right: 20px;">
+                    <i class="fa-solid fa-heart"></i>
+                  </a>
+                  <a class="nav-link cart-icon" href="/cart" style="margin-right: 20px;">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                  </a>
+                  
+                  <a class="nav-link" href="/logout">
+                    <button class="logout-btn" style="margin-right: 20px; background-color: #F9F5EA;border-radius: 20px;width: 100px;border:1px solid rgba(194, 132, 113, 0.582);">Log Out</button>
+                  <a class="nav-link" href="/logout"></a>
+
+                  
+      <% if(typeof currentPage!=='undefined'){ %>
+        <form class="d-flex"  method="get" action="/userProductList?page=<%=currentPage%>&sort=<%=sort%>">
+      <% }else{ %>
+      <form class="d-flex"  method="get" action="/userProductList?sort=<%=sort%>"> <!-- role="search" -->
+        <% } %>
+        <input type="hidden" name="price" id="price" value="<%=price%>">
+        <input type="hidden" name="productSize" id="productSize" value="<%=productSize%>">
+        <input type="hidden" name="aromaType" id="aromaType" value="<%=aromaType%>">
+        <input type="hidden" name="aromaLevel" id="aromaLevel" value="<%=aromaLevel%>">
+        <input type="hidden" name="sort" value="<%=sort%>">
+        <input class="form-control me-2" type="text" name="search" id="search" placeholder="Search" aria-label="Search" >
+        <button class="btn btn-dark" type="submit" style="margin-right:0px Important;padding: 0;width:100px;" class="pagination-limit">Search</button>
+      </form>
+                </div>
+              </div>
+            </nav>
+          </div>  
+        </div>

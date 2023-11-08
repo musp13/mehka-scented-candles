@@ -1,0 +1,175 @@
+<%- include('includes/admin-head-end') %>
+<%- include('includes/admin-side-pane') %>
+
+<h3 style="margin-left: 16vw;margin-bottom: 10px;margin-top: 30px;">Product Details</h3>
+
+<section class="intro" style="margin-left: 15vw;">
+    <div class="bg-image h-100">
+      <div class="mask d-flex align-items-center h-100">
+        <div class="container">
+          <div class="row justify-content-center">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-body">
+                  <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                      <thead>
+                        <tr>
+                          <th scope="col"></th>
+                          <th scope="col">Values</th>
+                          
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <th scope="row">_id</th>
+                          <td>
+                            <span class="text-success">
+                                <%=product._id%></td>
+                            </span>
+                        </tr>
+                        <tr>
+                          <th scope="row">Name</th>
+                          <td>
+                            <span class="text-danger">
+                              <!-- <i class="fas fa-caret-down me-1"> --></i><span><%=product.name%></span>
+                            </span>
+                          </td>
+                          
+                        </tr>
+                        <tr>
+                          <th scope="row">Description</th>
+                          <td>
+                            <span class="text-danger">
+                              <span><%=product.description%></span>
+                            </span>
+                          </td>
+                          
+                          
+                        </tr>
+                        <tr>
+                          <th scope="row">Stock Left</th>
+                          <td>
+                            <span class="text-danger">
+                              </i><span><%=product.stockLeft%></span>
+                            </span>
+                          </td>
+                          
+                          
+                        </tr>
+                        <tr>
+                          <th scope="row">Price</th>
+                          <td>
+                            <span class="text-danger">
+                              </i><span><%=product.price%></span>
+                            </span>
+                          </td>
+                          
+                          
+                        </tr>
+                        <tr>
+                          <th scope="row">Discount%</th>
+                          <td>
+                            <span class="text-danger">
+                              </i><span><%=product.discount%></span>
+                            </span>
+                          </td>
+                          
+                          
+                        </tr>
+                        <tr>
+                            <th scope="row">Added Date</th>
+                            <td>
+                              <span class="text-danger">
+                                </i><span><%=product.addedDate%></span>
+                              </span>
+                            </td>
+                        </tr>
+                        <tr>
+                          <th scope="row">Aroma Level</th>
+                          <td>
+                            <span class="text-danger">
+                              </i><span><%=product.aromaLevel%></span>
+                            </span>
+                          </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Aroma Type</th>
+                            <td>
+                              <span class="text-danger">
+                                </i><span><%=product.aromaType%></span>
+                              </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Product Size</th>
+                            <td>
+                              <span class="text-danger">
+                                </i><span><%=product.productSize%></span>
+                              </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Quantity/Volume</th>
+                            <td>
+                              <span class="text-danger">
+                                </i><span><%=product.quantity%></span>
+                              </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Category</th>
+                            <td>
+                              <span class="text-danger">
+                                </i><span><%=category%></span>
+                              </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Detail Description</th>
+                            <td>
+                              <span class="text-danger">
+                                </i><span><%=product.detailDescription%></span>
+                              </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Ingredients</th>
+                            <td>
+                              <span class="text-danger">
+                                </i><span><%=product.ingredients%></span>
+                              </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">How to Use</th>
+                            <td>
+                              <span class="text-danger">
+                                </i><span><%=product.howToUse%></span>
+                              </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">How to Feel</th>
+                            <td>
+                              <span class="text-danger">
+                                </i><span><%=product.howToFeel%></span>
+                              </span>
+                            </td>
+                        </tr>
+                        
+
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+<%- include('includes/tail-end') %>

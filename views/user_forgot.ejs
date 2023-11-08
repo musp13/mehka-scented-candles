@@ -1,0 +1,52 @@
+<%- include('includes/head-end') %>
+
+<center>
+    <form action="/forgot_password_post" method="post">
+        <div class="card text-center" style="width: 300px;">
+            <div class="card-header h5 text-white bg-dark">Password Reset</div>
+            <div class="card-body px-5">
+                <p class="card-text py-2">
+                    Enter your email address and we'll send you an email with instructions to reset your password.
+                </p>
+                <div class="form-outline">
+                    <label class="form-label" for="email" style="margin-top: 4vh;">Email input</label>
+                    <input type="email" id="email" name="email" class="form-control" onkeyup="validateEmail()" required/>
+                    
+                    <span id="emailError" style="color: red;"></span>
+                </div>
+                <!-- <a href="#" class="btn btn-primary w-100">Reset password</a> -->
+                <br>
+                <button type="submit" class="btn btn-dark w-100">Reset password</button>
+                <div style="color: green;">
+                    <% if (typeof message!='undefined'){ %>
+                        <%= message %>
+                    <% } %>
+                </div>
+
+                <div class="d-flex justify-content-between mt-4">
+                    <a class="" href="/login" style="color: black;">Login</a>
+                    <a class="" href="/signup" style="color: black;">Register</a>
+                </div>
+            </div>
+        </div>
+    </form>
+</center>
+
+<script>
+    function validateEmail(){
+        const emailInput = document.getElementById('email');
+        const emailError = document.getElementById('emailError');
+
+        // Regular expression for email validation
+        const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+        
+        if (!emailPattern.test(emailInput.value)) {
+            emailError.textContent = 'Please enter a valid email address.';
+        }
+        else{
+            emailError.textContent = '';
+        }
+    }
+</script>
+
+<%- include('includes/tail-end') %>

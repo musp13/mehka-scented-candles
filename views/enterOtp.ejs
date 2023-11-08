@@ -1,0 +1,84 @@
+<%- include('includes/head-end') %>
+
+<center>
+    <form action="/verify_otp" method="post">
+        <div class="card text-center" style="width: 300px;">
+            <div class="card-header h5 text-white bg-dark">OTP Login</div>
+            <div class="card-body px-5">
+                <p class="card-text py-2">
+                    Enter your otp that has been sent to your email.
+                </p>
+                <div class="form-outline password-input">
+                    <label class="form-label" for="otp" style="margin-top: 5vh;">Enter OTP</label>
+                    <input type="text" id="otp" name="otp" class="form-control my-1" required/>
+                    <div id="otpError" style="color: red;">
+                    <% if(typeof message !== 'undefined') { %>
+                        <%= message%>
+                    <% } %>
+
+                    </div>
+                    
+                </div>
+                <!-- <a href="#" class="btn btn-primary w-100">Reset password</a> -->
+                <input type="hidden" id="userId" name="userId" value="<%= userId %>" >
+                <br>
+                <button type="submit" class="btn btn-dark w-100">Login</button>
+                <!-- <div style="color: green;">
+                    <% if (typeof message!='undefined'){ %>
+                        <%= message %>
+                    <% } %>
+                </div> -->
+
+                <!-- <div class="d-flex justify-content-between mt-4">
+                    <a class="" href="/login" style="color: black;">Login</a>
+                    <a class="" href="/signup" style="color: black;">Register</a>
+                </div> -->
+            </div>
+        </div>
+    </form>
+</center>
+
+<!-- <script>
+    document.querySelector("form").addEventListener("submit",function(e){
+        e.preventDefault();
+        console.log('hello');
+
+        const userId = document.querySelector("#userId").value;
+        const enteredOtp = document.querySelector("#otp").value;
+        const otpError = document.querySelector("#otpError");
+
+        // Check if the OTP field is empty
+        if(enteredOtp.trim()==="")
+        {
+            otpError.textContent = "Please enter an OTP.";
+            return;
+        }
+
+        // Make an AJAX request to verify OTP
+        fetch('/verify_otp', {
+            method : "POST",
+            header : {
+                "content-Type" : "application/json",
+            },
+            body : JSON.stringify({userId, enteredOtp}),
+        })
+        .then((response)=> response.json())
+        .then((data)=>{
+            if(data.success){
+                //Redirect to the desired page on success
+                window.location.href = "/userProductList";
+                console.log(data);
+            }
+            else{
+                console.log(data);
+                otpError.textContent = "Invalid OTP";
+            }
+        })
+        .catch((error) => {
+            console.error("Error:", error);
+        }); 
+    });
+</script>
+ -->
+
+<%- include('includes/tail-end') %>

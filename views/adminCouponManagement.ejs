@@ -1,0 +1,106 @@
+<%- include('includes/admin-head-end') %>
+<%- include('includes/admin-side-pane') %>
+<% categories = {}%>
+
+<center>
+<div style="margin-bottom: 50px;margin-left: 10vw;">
+    <h1><b>Coupon Management</b></h1>
+</div>
+</center>
+
+<button class="btn btn-dark" onclick="window.location.href='/admin/addCouponLoad'" style="margin-left: 19vw;margin-bottom: 10px;">Add Coupon</button>
+<center style="margin-left: 10vw;">
+<section class="intro" style="margin-bottom: 50px;">
+<div class="gradient-custom-1 h-100">
+  <div class="mask d-flex align-items-center h-100">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-12">
+          <div class="table-responsive bg-white" style="margin-left: 5vw;">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Coupon Name</th>
+                        <th>Coupon Code</th>
+                        <th>Discount Type</th>
+                        <th>Discount Amount</th>
+                        <th>Expiry Date</th>
+                        <!-- <th>Max Usage</th> -->
+                        <th>Max Usage Per User</th>
+                        <th>Is Active</th>
+                        <th>Min Bill Amount</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% coupons.forEach(function(coupon) { %>
+                        <tr>
+                            <td><%= coupon.couponName %></td>
+                            <td><%= coupon.couponCode %></td>
+                            <td><%= coupon.discountType %></td>
+                            <td><%= coupon.discountAmount %></td>
+                            <td><%= coupon.expiryDate.toDateString() %></td>
+                            <!-- <td><%= coupon.maxUsage %></td> -->
+                            <td><%= coupon.maxUsagePerUser %></td>
+                            <td><%= coupon.isActive ? 'Yes' : 'No' %></td>
+                            <td><%= coupon.minBillAmount %></td>
+                            <td>
+                                <button class="btn" onclick="window.location.href='/admin/editCouponLoad?couponId=<%=coupon._id%>'"><i class="fa-regular fa-pen-to-square"></i></button>
+                                <button class="btn delete-coupon" data-coupon-id="<%= coupon._id%>"><i class="fa-solid fa-trash-can"></i></button>
+                            </td>
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+</center>
+
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+<script src="https://unpkg.com/sweetalert2@11"></script>
+<script>
+  $(document).ready(function () {
+      // Attach click event to the delete button
+      $('.delete-coupon').on('click', function () {
+          const couponId = $(this).data('coupon-id');
+          // Capture the reference to `this` in a variable
+          var deleteButton = $(this);
+
+          // Use SweetAlert for confirmation
+          Swal.fire({
+            title: 'Are you sure?',
+                text: 'You will not be able to recover this coupon!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'No, cancel',
+          }).then((result)=>{
+            if (result.isConfirmed) {
+              console.log('delete confirmed');
+              // Send a DELETE request to the server
+              $.ajax({
+                  url: '/admin/deleteCoupon', // Define the URL for the delete endpoint
+                  type: 'DELETE',
+                  data: { couponId }, // Send the couponId to identify which coupon to delete
+                  success: function (data) {
+                      console.log('deletion success', data);
+                      // If the deletion is successful, remove the coupon from the UI
+                      deleteButton.closest('tr').remove();
+                  },
+                  error: function (error) {
+                      console.error('Error deleting coupon:', error);
+                  },
+              });
+            }
+          })
+      });
+  });
+</script>
+
+<%- include('includes/tail-end') %>

@@ -1,0 +1,226 @@
+<%- include('includes/user-detail-head-end') %>
+
+  <!-- content -->
+  <section class="py-5">
+    <div class="container">
+      <div class="row gx-5">
+        <aside class="col-lg-6">  
+          <!--------------------image section------------------  --> 
+          <script src="/javascripts/script.js"></script>
+          <div class="rounded-4 mb-3 d-flex justify-content-center wrapper img-magnifier-container" id="main-image-container">
+            <!-- <a data-fslightbox="mygalley" class="rounded-4" target="_blank" data-type="image" href="/images/products/<%=product.mainImage%>"> -->
+              <img id="main_image" style="max-width: 100%; max-height: 65vh; margin: auto;object-fit: cover;" class="rounded-4 fit" src="/images/products/<%=product.mainImage%>" />
+            <!-- </a> -->
+          </div>
+          <% zoom_img_id="main_image" %>
+          
+          <!-- code for image zoom ends here -->
+          
+          <div class="d-flex justify-content-center mb-3">
+            <a href="#" class="border mx-1 rounded-2" onclick="changeMainImage('/images/products/<%=product.mainImage%>','auxiliaryImage-1')">
+              <img id="auxiliaryImage-1" width="60" height="60" class="rounded-2" src="/images/products/<%=product.mainImage%>" />
+           </a>
+            <% for(let i=0;i<product.auxiliaryImages.length;i++){ %>
+            <!-- <a data-fslightbox="mygalley" class="border mx-1 rounded-2" target="_blank" data-type="image" href="/images/products/<%=product.auxiliaryImages[i]%>" class="item-thumb">
+             -->
+             <a href="#" class="border mx-1 rounded-2" onclick="changeMainImage('/images/products/<%=product.auxiliaryImages[i]%>','auxiliaryImage<%=i%>')">
+               <img id="auxiliaryImage<%=i%>" width="60" height="60" class="rounded-2" src="/images/products/<%=product.auxiliaryImages[i]%>" />
+            </a>
+            <%}%>
+        </aside>
+
+        <script>
+          function changeMainImage(newImageSrc,newImage_id) {
+              var mainImage = document.getElementById("main_image");
+              mainImage.src = newImageSrc;
+              /* newImage_id */
+              zoom_img_id=newImage_id;
+              magnify("main_image", 3);
+          }
+      </script>
+
+        <!-- try -->
+        
+
+        <!-- ---------------------image section ended--------------- -->
+        <!-- <%=userId%> -->
+        <main class="col-lg-6">
+          <div class="ps-lg-3">
+            <h4 class="title text-dark">
+                <%= product.name %>
+            </h4>
+            <h6 class="title text-dark">
+                <%= product.description %>
+            </h6>
+            <div class="d-flex flex-row  my-3">
+              <div class="text-warning mb-1 me-2">
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fas fa-star-half-alt"></i>
+                <span class="ms-1">
+                  4.5
+                </span>
+              </div>
+              <% if(product.stockLeft<1){ %>
+                <span class="text-danger">Out of stock</span>
+              <% }else if(product.stockLeft<=10){ %>
+                <span class="text-danger">Low stock</span>
+              <% }else{ %>
+                <span class="" style="color: rgb(8, 172, 8);">In stock</span>
+              <% } %>    
+            </div>
+            
+            
+  
+            <div class="mb-3" style="margin-top: 10px;">
+              <span class="h5">&#8377;<%= product.price %></span>
+              <span class="text-muted">/per box</span>
+            </div>
+  
+            <p>
+                <%= product.detailDescription   %>
+            </p>
+            <br>
+            <div class="row">
+              <dt class="col-3">Aroma Type:</dt>
+              <dd class="col-9"><%= product.aromaType %></dd>
+  
+              <dt class="col-3">Aroma Level:</dt>
+              <dd class="col-9"><%= product.aromaLevel %></dd>
+  
+              <dt class="col-3">Ingredients:</dt>
+              <dd class="col-9"><%= product.ingredients %></dd>
+  
+            </div>
+  
+            <hr />
+  
+            <div class="row mb-4">
+              </div>
+            </div>
+            <!-- <a href="#" class="btn btn-warning shadow-0"> Buy now </a> -->
+            <a href="#" class="btn btn-dark shadow-0" id="add-to-cart-button"> <i class="me-1 fa fa-shopping-basket"></i> Add to cart </a>
+           <!--  <a href="#" class="btn btn-light border border-secondary py-2 icon-hover px-3"> <i class="me-1 fa fa-heart fa-lg"></i> Save </a> -->
+            <button
+                type="button"
+                class="btn btn-light border border-secondary py-2 icon-hover px-3 save-to-favorites-btn"
+                title="Save to Favorites"
+                data-product-id="<%= product._id %>"
+            >
+                <i class="me-1 fa fa-heart fa-lg"></i> Save
+            </button>
+
+          </div>
+        </main>
+      </div>
+    </div>
+  </section>
+  <!-- content -->
+  
+</div>
+
+<script>
+  /* Execute the magnify function: */
+  /* magnify("main_image", 3); */
+  magnify("main_image", 3);
+  /* Specify the id of the image, and the strength of the magnifier glass: */
+</script>
+
+<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+<script src=
+"https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.0/sweetalert.min.js">
+  </script>
+<script>
+ 
+ $(document).ready(function () {
+  $('#add-to-cart-button').click(function () {
+    console.log('inside addtocart button script button click');
+    const userId = '<%= userId %>'; // Replace with the actual user ID
+    const productId = '<%= product._id %>'; // Replace with the actual product ID
+    //const quantity = 1; // You can change this based on user input
+
+    $.ajax({
+      type: 'POST',
+      url: '/addToCart',
+      data: { userId, productId },// , quantity 
+      success: function (response) {
+        // Handle success, e.g., show a success message or update the cart icon
+        //alert(response.message);
+        swal({
+          title:response.message,
+          icon:"success",
+          timer: 1000,
+          /* buttons: false, */
+        })/* .then(
+          function () {},
+          // handling the promise rejection
+          function (dismiss) {
+            if (dismiss === 'timer') {
+              //console.log('I was closed by the timer')
+            }
+          }
+        ) */; 
+        
+      },
+      error: function (error) {
+        // Handle error, e.g., show an error message
+        console.error(error);
+        
+      },
+    });
+  });
+
+  // Event listener for the "Save" button on the product detail page
+  $(".save-to-favorites-btn").click(function() {
+        // Get the product ID from the data-product-id attribute
+        const productId = $(this).data("product-id");
+        const userId = '<%=userId%>';
+
+        // Now you have the productId, and you can use it for your AJAX request
+        // Perform your AJAX request to add the product to favorites here
+        // You can use productId in the AJAX request as needed
+
+        // Example AJAX request:
+        $.ajax({
+            type: "POST",
+            url: `/add-to-favorites/${userId}/${productId}`,
+            dataType: "json",
+            success: function(response) {
+               // window.alert(response.message);
+                console.log("Product added to favorites:", response.favorites);
+                // Update the UI to reflect the change, e.g., change the button appearance
+                //alert(response.message);
+                //swal('Added to Favorites', 'Item has been added to your favorites', 'success');
+                swal({
+                  title: "Added to Favorites!",
+                  text: "Item has been added to your favorites.",
+                  icon: 'success',
+                  timer: 1000
+                });
+
+            },
+            error: function(xhr, status, error) {
+                console.error("Failed to add product to favorites:", error);
+                //swal('Added to Cart', 'Item has been added to your cart', 'success');
+
+            }
+        });
+    });
+}); 
+
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.min.js" integrity="sha384-Rx+T1VzGupg4BHQYs2gCW9It+akI2MM/mndMCy36UVfodzcJcF0GGLxZIzObiEfa" crossorigin="anonymous"></script>
+
+
+
+<!-- <script src="/javascripts/image-zoom.js"></script> -->
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+ -->
+
+ 
+</body>
+</html>

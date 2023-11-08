@@ -1,0 +1,111 @@
+<%- include('includes/head-end') %>
+<% if (typeof formValue == undefined) {
+  formValue = null;
+} %>
+
+<%
+const today = new Date();
+const maxBirthYear = today.getFullYear() - 15; // 15 years ago
+const minBirthYear = today.getFullYear() - 150; // 150 years ago
+%>
+
+<section class="vh-110 gradient-custom">
+  <div class="container py-5 h-100">
+    <div class="row justify-content-center align-items-center h-100">
+      <div class="col-12 col-lg-9 col-xl-7">
+        <div class="card shadow-2-strong card-registration" style="border-radius: 15px;">
+          <div class="card-body p-4 p-md-5">
+            <div class="d-flex justify-content-between">
+              <h3 class="mb-4 pb-2 pb-md-0 mb-md-5">Sign Up</h3>
+              <button type="button" class="btn report-type-buttons pink-button" style="height: 40px;" onclick="window.location.href='/login'">Log In</button>
+            </div>
+            
+            <form action="/user_signup_post" method="post" onsubmit="return validateForm()">
+
+              <div class="row">
+                <div class="col-md-6 mb-4">
+                  <div class="form-outline">
+                    <input type="text" id="fullName" name="fullName" class="form-control form-control-lg"
+                      value="<%= formValue && formValue.fullName ? formValue.fullName : '' %>" pattern="^[A-Za-z ]+$" required />
+                    <label class="form-label" for="fullName">Full Name</label>
+                  </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                  <div class="form-outline">
+                    <input type="email" id="email" name="email" value="<%= formValue && formValue.email ? formValue.email : '' %>"
+                      class="form-control form-control-lg" required />
+                    <label class="form-label" for="email">Email</label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6 mb-4">
+                  <div class="form-outline">
+                    <input type="password" id="password" name="password" class="form-control form-control-lg" required />
+                    <label class="form-label" for="password">Password</label>
+                  </div>
+                  <div class="error-message" id="password-error"></div>
+                </div>
+                <div class="col-md-6 mb-4">
+                  <div class="form-outline">
+                    <input type="password" id="retype-password" name="retype-password" class="form-control form-control-lg"
+                      required />
+                    <label class="form-label" for="retype-password">Retype Password</label>
+                  </div>
+                  <div class="error-message" id="retype-password-error"></div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-12 mb-4">
+                  <div class="mt-1 pt-1">
+                    <input class="btn btn-dark btn-lg w-100" type="submit" value="Submit" />
+                  </div>
+                </div>
+              </div>
+
+              <p style="color: green;">
+                <% if (typeof message !== 'undefined') { %>
+                <%= message %>
+                <% } %>
+              </p>
+
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  function validateForm() {
+    const password = document.getElementById("password").value;
+    const retypePassword = document.getElementById("retype-password").value;
+    const passwordError = document.getElementById("password-error");
+    const retypePasswordError = document.getElementById("retype-password-error");
+
+    // Reset error messages
+    passwordError.innerHTML = "";
+    retypePasswordError.innerHTML = "";
+
+    let isValid = true;
+
+    // Check if passwords match
+    if (password !== retypePassword) {
+      retypePasswordError.innerHTML = "<span class='text-danger'>Passwords must match</span>";
+      isValid = false;
+    }
+
+    // Check if password is at least 4 characters long
+    if (password.length < 4) {
+      passwordError.innerHTML = "<span class='text-danger'>Password must be at least 4 characters long</span>";
+      isValid = false;
+    }
+
+    return isValid;
+  }
+</script>
+
+<%- include('includes/tail-end') %>

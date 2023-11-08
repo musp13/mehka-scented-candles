@@ -1,0 +1,308 @@
+<%- include('includes/admin-head-end') %>
+<%- include('includes/admin-side-pane') %>
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<main class="main-wrap">
+
+    <section class="content-main">
+
+        <div class="content-header">
+            <div>
+                <h2 class="content-title card-title">Dashboard </h2>
+                <p>Whole data about your business here</p>
+            </div>
+          
+        </div>
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="card card-body mb-4">
+                    <article class="icontext">
+                        <span class="icon icon-sm rounded-circle bg-primary-light"><i class="fa-solid fa-indian-rupee-sign text-primary"></i></span>
+                        <div class="text">
+                            <h6 class="mb-1 card-title">Revenue</h6>
+                            <span>₹<%= (orders.length > 0 ? orders[0].totalPriceSum : 0) %></span>
+                            <span class="text-sm">
+                            </span>
+                        </div>
+                    </article>
+                </div>
+            </div>
+            <div class="col-lg-3">
+                <div class="card card-body mb-4">
+                    <article class="icontext">
+                        <span class="icon icon-sm rounded-circle bg-success-light"><i class="fa-solid fa-truck text-success"></i></span>
+                        <div class="text">
+                            <h6 class="mb-1 card-title">Orders</h6> <span><%= (orders.length > 0 ? orders[0].count : 0) %></span>
+                            <span class="text-sm">
+                            </span>
+                        </div>
+                    </article>
+                </div>
+            </div>
+            <div class="col-lg-3">
+                <div class="card card-body mb-4">
+                    <article class="icontext">
+                        <span class="icon icon-sm rounded-circle bg-warning-light"><i class="fa-solid fa-bag-shopping text-warning"></i></span>
+                        <div class="text">
+                            <h6 class="mb-1 card-title">Products</h6> <span><%=productsCount%></span>
+                            <span class="text-sm">
+                                in <%=categoryCount%> categories
+                            </span>
+                        </div>
+                    </article>
+                </div>
+            </div>
+            <div class="col-lg-3">
+                <div class="card card-body mb-4">
+                    <article class="icontext">
+                        <span class="icon icon-sm rounded-circle bg-info-light"><i class="fa-solid fa-money-check-dollar text-info"></i></span>
+                        <div class="text">
+                            <h6 class="mb-1 card-title">Online Earning</h6> <span>₹<%=onlinePay.totalPriceSum.toFixed(2)%></span>
+                            <span class="text-sm">
+                                from <%=onlinePay.count%> orders
+                            </span>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </div>
+
+        <!-- <canvas id="salesChart">
+        </canvas> -->
+        <div class="row">
+            <div class="col-xl-8 col-lg-12">
+                <div class="card mb-4">
+                    <article class="card-body">
+                        <h5 class="card-title">Sale statistics</h5>
+                        <canvas id="salesChart" height="120px"></canvas>
+                    </article>
+                </div>    
+            </div>
+            <div class="col-xl-4 col-lg-12">
+                <div class="card mb-4">
+                    <article class="card-body">
+                        <h5 class="card-title">Orders Based on date</h5>
+                        <canvas id="salesCount" height="217"></canvas>
+                    </article>
+                </div>    
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xl-6 col-lg-8">
+                <div class="card mb-4">
+                    <article class="card-body">
+                        <h5 class="card-title">Category Sales</h5>
+                        <canvas id="myPieChart" height="100px"></canvas>
+                    </article>
+                </div>
+            </div>
+            <div class="col-xl-6 col-lg-12">
+                <div class="card mb-4">
+                    <article class="card-body">
+                        <h5 class="card-title">Revenue Based on Payment Methods</h5>
+                        <canvas id="barChart" height="217"></canvas>
+                    </article>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <header class="card-header">
+                <h4 class="card-title">Latest orders</h4>             
+            </header>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <div class="table-responsive">
+                        <table class="table align-middle table-nowrap mb-0">
+                            <thead>
+                                <tr>
+                                    <th>#ID</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Total</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col">Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            <% latestorders.forEach(function(order,index) {%>
+                                <tr>
+                                    <td><%=order._id %></td>
+                                    <td><b><%=order.name%></b></td>
+                                    <td>₹<%=order.total%></td>
+                                    <td>
+                                        
+                                        <% if (order.status == 'placed') { %>
+                                            <div class="new-badge rounded-pill alert-primary"><%= order.status %></div>
+                                        <% } else if (order.status == 'shipped') { %>
+                                            <div class="new-badge rounded-pill alert-info"><%= order.status %></div>
+                                        <% } else if (order.status == 'cancelled' ) { %>
+                                            <div class="new-badge rounded-pill alert-warning"><%= order.status%></div>
+                                        <% } else if (order.status == 'delivered') { %>
+                                            <div class="new-badge rounded-pill alert-success"><%= order.status %></div>
+                                        <% } else if (order.status == 'return' ) { %>
+                                            <div class="new-badge rounded-pill alert-warning"><%= order.status %></div>
+                                        <% } else { %>
+                                            <div class="new-badge rounded-pill alert-danger"><%= order.status %></div>
+                                        <% } %>
+                                    </td>
+                                    <td><%=order.date.toLocaleString()%></td>
+                                </tr>
+                                <!-- <%= order._id %> -->
+                            <% }) %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>           
+    </section>
+</main>
+<script>
+    // Sample data (replace this with your actual data)
+   
+const datas = JSON.parse('<%- JSON.stringify(categorySales) %>');
+console.log('hello,lets begin');
+// Extracting labels and data for the chart
+const labels = datas.map(item => item.categoryName);
+const prices = datas.map(item => item.PriceSum);
+
+// Generate a random color for each slice of the pie chart
+const getRandomColor = () => '#' + Math.floor(Math.random()*16777215).toString(16);
+
+// Creating the pie chart
+const contexts = document.getElementById('myPieChart').getContext('2d');
+const myPieChart = new Chart(contexts, {
+type: 'pie',
+data: {
+labels: labels,
+datasets: [{
+  data: prices,
+  backgroundColor: datas.map(item => getRandomColor()),
+  borderColor: 'white',
+  borderWidth: 1
+}]
+},
+options: {
+title: {
+  display: true,
+  text: 'Pie Chart'
+}
+}
+});
+
+</script>
+
+<script>
+    const salesData = JSON.parse('<%- JSON.stringify(salesData) %>');
+    console.log("salesdata");
+
+    const dates = salesData.map(item => item._id);
+    const dailySales = salesData.map(item => item.dailySales);
+
+    const ctx = document.getElementById('salesChart').getContext('2d');
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: dates,
+        datasets: [{
+          label: 'Daily Sales',
+          data: dailySales,
+          backgroundColor: 'rgba(75, 192, 192, 0.2)',
+          borderColor: 'rgba(75, 192, 192, 1)',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+</script>
+
+<script>
+     const salesCount = JSON.parse('<%- JSON.stringify(salesCount) %>');
+
+const date = salesCount.map(item => item._id);
+const orderCounts = salesCount.map(item => item.orderCount);
+
+const ctxs = document.getElementById('salesCount').getContext('2d');
+new Chart(ctxs, {
+type: 'bar',
+data: {
+labels: date,
+datasets: [{
+  label: 'Orders per Date',
+  data: orderCounts,
+  backgroundColor: 'rgba(75, 192, 192, 0.2)',
+  borderColor: 'rgba(75, 192, 192, 1)',
+  borderWidth: 1
+}]
+},
+options: {
+responsive: true,
+scales: {
+  y: {
+    beginAtZero: true
+  },
+  x: {
+  }
+}
+}
+});
+    
+</script>
+<script>
+
+
+// Sample data for three values
+const onlinePay = JSON.parse('<%- JSON.stringify(onlinePay) %>');
+const codPay = JSON.parse('<%- JSON.stringify(codPay) %>');
+const walletPay = JSON.parse('<%- JSON.stringify(walletPay) %>'); 
+console.log('onlinePay',onlinePay.totalPriceSum);
+console.log('codPay',codPay.totalPriceSum);
+console.log('walletPay',walletPay.totalPriceSum);
+const data = {
+labels: ['COD', 'Wallet', 'RAZORPAY'],
+datasets: [{
+label: 'Comparison',
+data: [codPay.totalPriceSum, walletPay.totalPriceSum, onlinePay.totalPriceSum],
+backgroundColor: [
+  'rgba(255, 99, 132, 0.7)', // Value 1 color
+  'rgba(54, 162, 235, 0.7)', // Value 2 color
+  'rgba(75, 192, 192, 0.7)', // Value 3 color
+],
+borderColor: [
+  'rgba(255, 99, 132, 1)',
+  'rgba(54, 162, 235, 1)',
+  'rgba(75, 192, 192, 1)',
+],
+borderWidth: 1
+}]
+};
+
+// Get the canvas element
+const context = document.getElementById('barChart').getContext('2d');
+
+// Create the bar chart
+new Chart(context, {
+type: 'bar',
+data: data,
+options: {
+scales: {
+  y: {
+    beginAtZero: true
+  }
+}
+}
+});
+
+
+</script>
+
+<%- include('includes/tail-end') %>

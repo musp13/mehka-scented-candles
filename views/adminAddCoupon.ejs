@@ -1,0 +1,281 @@
+<%- include('includes/admin-head-end') %>
+<%- include('includes/admin-side-pane') %>
+
+<center style="margin-left: 10vw;">
+    <form action="/admin/addCouponPost" method="post">
+        <div>
+            <h3 style="margin-top: 50px; margin-bottom: 20px;"><b>Add Coupon</b></h3>
+            <div class="form-group row" style="width: 50vw;">
+                <label for="couponName" class="col-sm-2 col-form-label">Coupon Name</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="couponName" name="couponName">
+                    <div id="couponNameError" class="text-danger"></div>
+                </div>
+            </div>
+            <div class="form-group row" style="width: 50vw;">
+                <label for="couponCode" class="col-sm-2 col-form-label">Coupon Code</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="couponCode" name="couponCode">
+                    <div id="couponCodeError" class="text-danger"></div>
+                    <div id="duplicateCouponError" class="text-danger"></div>
+                </div>
+            </div>
+            <div class="form-group row" style="width: 50vw;">
+                <label for="discountType" class="col-sm-2 col-form-label">Discount Type</label>
+                <div class="col-sm-10">
+                    <select class="form-control" id="discountType" name="discountType">
+                        <option value="percentage">Percentage</option>
+                        <option value="fixed">Fixed Amount</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group row" style="width: 50vw;">
+                <label for="discountAmount" class="col-sm-2 col-form-label">Discount Amount</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="discountAmount" name="discountAmount">
+                    <div id="discountAmountError" class="text-danger"></div>
+                </div>
+            </div>
+            <div class="form-group row" style="width: 50vw;">
+                <label for="expiryDate" class="col-sm-2 col-form-label">Expiry Date</label>
+                <div class="col-sm-10">
+                    <input type="date" class="form-control" id="expiryDate" name="expiryDate" min="<%= (new Date()).toISOString().split('T')[0] %>" required>
+                    <div id="expiryDateError" class="text-danger"></div>
+                </div>
+            </div>
+            
+            <div class="form-group row" style="width: 50vw; margin-top: 25px;">
+                <label for="minBillAmount" class="col-sm-2 col-form-label">Minimum Bill Amount</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="minBillAmount" name="minBillAmount" style="margin-top: 10px;">
+                    <div id="minBillAmountError" class="text-danger"></div>
+                </div>
+            </div>
+            <div class="form-group row" style="width: 50vw; margin-top: 25px;">
+                <label for="maxUsagePerUser" class="col-sm-2 col-form-label">Max Usage Per User</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="maxUsagePerUser" name="maxUsagePerUser">
+                    <div id="maxUsagePerUserError" class="text-danger"></div>
+                </div>
+            </div>
+            <div class="form-group row" style="width: 50vw;">
+                <label for="description" class="col-sm-2 col-form-label">Description</label>
+                <div class="col-sm-10">
+                    <textarea class="form-control" id="description" name="description" rows="4"></textarea>
+                    <div id="descriptionError" class="text-danger"></div>
+                </div>
+            </div>
+            <div class="form-group row" style="width: 50vw; margin-top: 20px;">
+                <label class="col-sm-2 col-form-label">Is Active?</label>
+                <div class="col-sm-10" style="margin-top: 5px;">
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="isActive" id="isActiveYes" value="true">
+                        <label class="form-check-label" for="isActiveYes">Yes</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="isActive" id="isActiveNo" value="false" checked>
+                        <label class="form-check-label" for="isActiveNo">No</label>
+                    </div>
+                    <div id="isActiveError" class="text-danger"></div>
+                </div>
+            </div>
+
+            <div class="form-group row" style="margin-left: 115px; margin-top: 10px; width: 40vw; color: brown;">
+                <% if(typeof message !== 'undefined'){ %>
+                    <%= message %>
+                <% } %>
+            </div>
+
+            <div class="form-group row" style="margin-left: 115px; margin-top: 10px; width: 40vw; margin-bottom: 40px;">
+                <button type="submit" class="btn btn-dark" id="submitCoupon">Add Coupon</button>
+            </div>
+        </div>
+    </form>
+</center>
+
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+<script>
+    $(document).ready(function () {
+        const $couponNameInput = $('#couponName');
+        const $couponNameError = $('#couponNameError');
+        const $couponCodeInput = $('#couponCode');
+        const $couponCodeError = $('#couponCodeError');
+        const $duplicateCouponError = $('#duplicateCouponError');
+        const $discountAmountInput = $('#discountAmount');
+        const $discountAmountError = $('#discountAmountError');
+        const $expiryDateInput = $('#expiryDate');
+        const $expiryDateError = $('#expiryDateError');
+        const $minBillAmountInput = $('#minBillAmount');
+        const $minBillAmountError = $('#minBillAmountError');
+        const $maxUsagePerUserInput = $('#maxUsagePerUser');
+        const $maxUsagePerUserError = $('#maxUsagePerUserError');
+        const $isActiveYesInput = $('#isActiveYes');
+        const $isActiveNoInput = $('#isActiveNo');
+        const $isActiveError = $('#isActiveError');
+        const $submitCoupon = $('#submitCoupon');
+        const $discountTypeInput = $('#discountType');
+
+        function validateRequiredField(fieldValue, fieldName, $errorElement) {
+            if (fieldValue.trim() === '') {
+                $errorElement.text(fieldName + ' is required.');
+                return false;
+            }
+            $errorElement.text('');
+            return true;
+        }
+
+        function validateCouponName(couponName) {
+            if (!validateRequiredField(couponName, 'Coupon Name', $couponNameError)) {
+                return false;
+            }
+            $couponNameError.text('');
+            return true;
+        }
+
+        function validateCouponCode(couponCode) {
+            if (!validateRequiredField(couponCode, 'Coupon Code', $couponCodeError)) {
+                return false;
+            }
+            // Check if the coupon code already exists in the couponCodes array
+            const couponCodes = '<%= JSON.stringify(couponCodes) %>'; // Use JSON.stringify to convert to a JavaScript array
+            const isDuplicate = couponCodes.includes(couponCode);
+
+            if (isDuplicate) {
+                $duplicateCouponError.text('Coupon Code is already in use.');
+                $couponCodeError.text('');
+                return false;
+            } else {
+                $duplicateCouponError.text('');
+                $couponCodeError.text('');
+                return true;
+            }
+            $couponCodeError.text('');
+            return true;
+        }
+
+        function validateDiscountAmount(discountAmount) {
+            if (!validateRequiredField(discountAmount, 'Discount Amount', $discountAmountError)) {
+                return false;
+            }
+            if (isNaN(discountAmount)) 
+            {
+                $discountAmountError.text('Discount Amount must be a valid number.');
+                return false;
+            }
+
+            // Get the value of the discountType input field
+            const discountType = $discountTypeInput.val();
+            if (discountType == 'percentage') {
+                console.log('discount type=percentage');
+                const discountAmountValue = parseFloat(discountAmount);
+                if (discountAmountValue < 0 || discountAmountValue > 100) {
+                    $discountAmountError.text('Discount Amount must be between 0 and 100 for percentage type.');
+                    return false;
+                }
+            }
+            $discountAmountError.text('');
+            return true;
+        }
+
+        function validateExpiryDate(expiryDate) 
+        {
+                if (!validateRequiredField(expiryDate, 'Expiry Date', $expiryDateError)) {
+                    return false;
+                }
+                $expiryDateError.text('');
+                return true;
+        }
+
+        function validateMinBillAmount(minBillAmount) {
+            if (!validateRequiredField(minBillAmount, 'Minimum Bill Amount', $minBillAmountError)) {
+                return false;
+            }
+
+            // Ensure minBillAmount is a valid non-negative number
+            if (isNaN(minBillAmount) || minBillAmount < 0) {
+                $minBillAmountError.text('Minimum Bill Amount must be a valid non-negative number.');
+                return false;
+            }
+
+            $minBillAmountError.text('');
+            return true;
+        }
+
+
+        function validateMaxUsagePerUser(maxUsagePerUser) {
+            if (!validateRequiredField(maxUsagePerUser, 'Max Usage Per User', $maxUsagePerUserError)) {
+                return false;
+            }
+
+            // Ensure maxUsagePerUser is a positive integer
+            if (!/^[1-9]\d*$/.test(maxUsagePerUser)) {
+                $maxUsagePerUserError.text('Max Usage Per User must be a positive non-zero integer.');
+                return false;
+            }
+
+            $maxUsagePerUserError.text('');
+            return true;
+        }
+
+        function validateIsActive() {
+            if (!$isActiveYesInput.is(':checked') && !$isActiveNoInput.is(':checked')) {
+                $isActiveError.text('Is Active? is required.');
+                return false;
+            }
+            $isActiveError.text('');
+            return true;
+        }
+
+        // Event handlers for form fields
+        $couponNameInput.on('blur', function () {
+            validateCouponName($couponNameInput.val());
+        });
+
+        $couponCodeInput.on('blur', function () {
+            validateCouponCode($couponCodeInput.val());
+        });
+
+        $discountAmountInput.on('blur', function () {
+            validateDiscountAmount($discountAmountInput.val());
+        });
+
+        $expiryDateInput.on('blur', function () {
+            validateExpiryDate($expiryDateInput.val());
+        });
+
+        $minBillAmountInput.on('blur', function () {
+            validateMinBillAmount($minBillAmountInput.val());
+        });
+
+        $maxUsagePerUserInput.on('blur', function () {
+            console.log('blur activated');
+            validateMaxUsagePerUser($maxUsagePerUserInput.val());
+        });
+
+        $isActiveYesInput.on('change', function () {
+            validateIsActive();
+        });
+
+        $isActiveNoInput.on('change', function () {
+            validateIsActive();
+        });
+
+        $submitCoupon.on('click', function (event) {
+            // Validate all form fields
+            const isCouponNameValid = validateCouponName($couponNameInput.val());
+            const isCouponCodeValid = validateCouponCode($couponCodeInput.val());
+            const isDiscountAmountValid = validateDiscountAmount($discountAmountInput.val());
+            const isExpiryDateValid = validateExpiryDate($expiryDateInput.val());
+            const isMinBillAmountValid = validateExpiryDate($expiryDateInput.val());
+            const isMaxUsagePerUserValid = validatemaxUsagePerUser($maxUsagePerUserInput.val());
+            const isIsActiveValid = validateIsActive();
+
+            // Check if there are any errors
+            if (!isCouponNameValid || !isCouponCodeValid || !isDiscountAmountValid || !isExpiryDateValid || isMinBillAmountValid || isMaxUsagePerUserValid || !isIsActiveValid) {
+                event.preventDefault(); // Prevent form submission
+            }
+        });
+    });
+</script>
+
+<%- include('includes/tail-end') %>

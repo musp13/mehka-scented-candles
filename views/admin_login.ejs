@@ -1,0 +1,55 @@
+<%- include('includes/head-end')    %>
+    
+
+        <div class="row" style="margin-right: 0;">
+            <div class="col-12" >
+                <div class="background-image">
+                  
+                  <div class="row">
+                    <div class="col-md-3"></div>
+                    <div class="col-md-6">
+                      <div class="centered-box">
+                                    <div class="rectangle-box">
+                                      <div id="admin-heading">Admin Login</div>
+                                        <!-- Your form content here -->
+                                        <form action="/admin/login_post" method="post">
+                                          <!-- Your form fields and elements here -->
+                                          
+
+                                            <div class="d-flex align-items-center mb-3 pb-1">
+                                              
+                                            </div>
+                          
+                                            <br>
+                                            <div class="form-outline mb-4">
+                                              <input type="text" id="admin_username" name="admin_username" class="form-control form-control-lg form-border" />
+                                              <label class="form-label" for="admin_username">Email address</label>
+                                            </div>
+                          
+                                            <div class="form-outline mb-4">
+                                              <input type="password" id="admin_password" name="admin_password" class="form-control form-control-lg form-border" />
+                                              <label class="form-label" for="admin_password">Password</label>
+                                            </div>
+                                            <div class="row">
+                                              <div class="col-12">
+                                                <div class="pt-1 mb-4">
+                                                  <button class="btn btn-dark  btn-block btn-lg" type="submit" style="width: 100%;border-radius: 30px;">Login</button>
+                                                </div>
+                                              </div>
+                                            </div>
+                                            
+                                        </form>
+                                    </div>
+                    </div>
+                    </div>
+                    <div class="col-md-3"></div>
+                  </div>
+                                                      
+                  
+                </div>
+            </div>
+        </div>
+    
+    
+<%- include('includes/tail-end') %>
+   

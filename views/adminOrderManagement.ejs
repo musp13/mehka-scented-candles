@@ -1,0 +1,142 @@
+<%- include('includes/admin-head-end') %>
+<%- include('includes/admin-side-pane') %>
+<center style="margin-left: 10vw;">
+    <div style="margin-bottom: 50px;">
+        <h1><b>Order Management</b></h1>
+    </div>
+
+    <!-- Add any other HTML content you need for order management -->
+
+    <section class="intro" style="margin-bottom: 50px;">
+        <div class="gradient-custom-1 h-100">
+            <div class="mask d-flex align-items-center h-100">
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-12">
+                            <div class="table-responsive bg-white" style="margin-left: 5vw;">
+                                <table class="table mb-0" style="background-color: white;border-radius: 10px;box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
+                                    <thead>
+                                        <tr>
+                                            <!-- <th scope="col">Order ID</th> -->
+                                            <th scope="col">Customer Name</th>
+                                            <th scope="col">Order Date</th>
+                                            <th scope="col">Total Amount</th>
+                                            <th scope="col">Payment Method</th>
+                                            <th scope="col">Payment Received?</th>
+                                            <th scope="col">Order Status</th>
+                                            <th scope="col">Invoice ID</th>
+                                            <th scope="col">Payment ID</th>
+                                            <!-- <th scope="col">Actions</th> -->
+                                        </tr>
+                                    </thead>
+                                    <% if(orders.length > 0){ %>
+                                        <% for(let i=0; i < orders.length; i++) { %>
+                                            <tbody>
+                                                <tr>
+                                                    <!-- <td><%= orders[i]._id %></td> -->
+                                                    <td><%= orders[i].userId.fullName %></td>
+                                                    <td><%= orders[i].orderDate.toDateString() %></td>
+                                                    <td>&#8377;<%= orders[i].totalAmount.toFixed(2) %></td>
+                                                    <td><%= orders[i].paymentMethod %></td>
+                                                    <!-- <td><%= orders[i].paymentReceived %></td> -->
+                                                    <td>
+                                                        <select class="form-control" id="paymentReceived<%= orders[i]._id %>" onchange="updatePaymentReceived('<%= orders[i]._id %>')">
+                                                            <option value="true" <%= orders[i].paymentReceived ? 'selected' : '' %>>Yes</option>
+                                                            <option value="false" <%= !orders[i].paymentReceived ? 'selected' : '' %>>No</option>
+                                                        </select>
+                                                    </td>
+                                                    <!-- <td><%= orders[i].orderStatus %></td> -->
+                                                    <td>
+                                                        <select class="form-control" id="orderStatus<%= orders[i]._id %>" onchange="updateOrderStatus('<%= orders[i]._id %>')">
+                                                            <option value="pending" <%= orders[i].orderStatus === 'pending' ? 'selected' : '' %> disabled>Pending</option>
+                                                            <option value="processing" <%= orders[i].orderStatus === 'processing' ? 'selected' : '' %> <%= (orders[i].orderStatus === 'placed') ? '' : 'disabled' %>>Processing</option>
+                                                            <option value="shipped" <%= orders[i].orderStatus === 'shipped' ? 'selected' : '' %> <%= (['placed', 'processing'].includes(orders[i].orderStatus)) ? '' : 'disabled' %>>Shipped</option>
+                                                            <option value="delivered" <%= orders[i].orderStatus === 'delivered' ? 'selected' : '' %> <%= (orders[i].orderStatus === 'shipped') ? '' : 'disabled' %>>Delivered</option>
+                                                            <option value="placed" <%= orders[i].orderStatus === 'placed' ? 'selected' : '' %> disabled>Placed</option>
+                                                            <option value="cancelled" <%= orders[i].orderStatus === 'cancelled' ? 'selected' : '' %> <%= (['pending', 'placed', 'processing'].includes(orders[i].orderStatus)) ? '' : 'disabled' %>>Cancelled</option>
+                                                            <option value="return" <%= orders[i].orderStatus === 'return' ? 'selected' : '' %> disabled>Return</option>
+                                                            <option value="returnedBack" <%= orders[i].orderStatus === 'returnedBack' ? 'selected' : '' %> <%= (orders[i].orderStatus === 'return') ? '' : 'disabled' %>>Returned Back</option>
+
+                                                           <!--  enum: ['pending', 'processing', 'shipped', 'delivered', 'cancelled','placed'], -->
+   
+                                                        </select>
+                                                    </td>
+                                                    <td><%= orders[i].invoiceId %></td>
+                                                    <td><%= orders[i].paymentId %></td>
+                                                    
+                                                </tr>
+                                            </tbody>
+                                        <% } %>                  
+                                    <% } else { %>
+                                        <tr>
+                                            <td colspan="6">No Orders Found</td>
+                                        </tr>
+                                    <% } %>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</center>
+
+<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+<script>
+    function updatePaymentReceived(orderId) {
+        const newValue = document.getElementById(`paymentReceived${orderId}`).value;
+
+        // Send an AJAX POST request to update paymentReceived
+        $.ajax({
+            type: 'POST',
+            url: `/admin/update_payment_received?id=${orderId}&value=${newValue}`,
+            success: function (data) {
+                // Handle success, e.g., show a message
+                console.log('Payment Received updated successfully:', data.message);
+            },
+            error: function (xhr, status, error) {
+                // Handle error, e.g., show an error message
+                console.error('Failed to update Payment Received:', error);
+            }
+        });
+    }
+
+    function updateOrderStatus(orderId) {
+        const selectElement = document.getElementById(`orderStatus${orderId}`);
+        const newValue = selectElement.value;
+        
+        // Send an AJAX request to update the orderStatus value
+        fetch(`/admin/update_order_status?id=${orderId}&value=${newValue}`)
+            .then(response => {
+                if (response.ok) {
+                    console.log('Order Status updated successfully');
+                } else {
+                    console.error('Failed to update Order Status');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+
+    function updateOrderStatus(orderId) {
+        const newValue = document.getElementById(`orderStatus${orderId}`).value;
+
+        // Send an AJAX POST request to update orderStatus
+        $.ajax({
+            type: 'POST',
+            url: `/admin/update_order_status?id=${orderId}&value=${newValue}`,
+            success: function (data) {
+                // Handle success, e.g., show a message
+                console.log('Order Status updated successfully:', data.message);
+            },
+            error: function (xhr, status, error) {
+                // Handle error, e.g., show an error message
+                console.error('Failed to update Order Status:', error);
+            }
+        });
+    }
+</script>
+
+<%- include('includes/tail-end') %>

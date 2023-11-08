@@ -1,0 +1,134 @@
+<%- include('includes/user-detail-head-end') %>
+<div class="cart-wrap">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="main-heading mb-10">My wishlist</div>
+                <div class="table-wishlist">
+                    <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                        <thead>
+                            <tr>
+                                <th width="40%">Product Name</th>
+                                <th width="15%">Unit Price</th>
+                                <th width="15%">Discounted Price</th>
+                                <th width="15%">Stock Status</th>
+                                <th width="15%"></th>
+                                <th width="10%"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% favoriteProducts.forEach(product => { %>
+                                <tr>
+                                    <td width="40%">
+                                        <div class="display-flex align-center">
+                                            <div class="img-product">
+                                                <a href="productDetail?product_id=<%=product._id%>">
+                                                    <img src="/images/products/<%= product.mainImage %>" alt="<%= product.name %>" class="mCS_img_loaded">
+                                                </a>
+                                            </div>
+                                            <div class="name-product">
+                                                <%= product.name %>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td width="15%" class="price">$<%= product.price.toFixed(2) %></td>
+                                    <td width="15%" class="discounted-price">
+                                        <% 
+                                            // Calculate the discounted price
+                                            const discountPercentage = product.discount || 0; // Default to 0 if no discount
+                                            const discountedPrice = product.price * (1 - discountPercentage / 100);
+                                        %>
+                                        $<%= discountedPrice.toFixed(2) %>
+                                    </td>
+                                    <td width="15%">
+                                        <span class="in-stock-box">
+                                            <% if(product.stockLeft<1){ %>
+                                                Out of Stock
+                                            <% }else if(product.stockLeft<=10){ %>
+                                                Low Stock
+                                            <% }else{ %>
+                                                In Stock
+                                            <% } %>
+                                        </span>
+                                    </td>
+                                    <td width="15%"><button class="round-black-btn small-btn  add-to-cart-btn"  data-product-id="<%= product._id %>">Add to Cart</button></td>
+                                    <td width="10%" class="text-center"><a href="#" class="trash-icon  delete-favorite-item" data-product-id="<%= product._id %>"><i class="far fa-trash-alt"></i></a></td>
+                                </tr>
+                            <% }); %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ---------------------------------------------------------------------------- -->
+<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+
+<script>
+    $(document).ready(function() {
+        const userId = '<%= user._id %>';
+    // Event listener for the "Add to Cart" button
+    $(".add-to-cart-btn").click(function() {
+        // Get the product ID from the data-product-id attribute
+        
+        const productId = $(this).data("product-id");
+
+        // Send an AJAX request to add the product to the cart
+        $.ajax({
+            type: "POST", // Use the appropriate HTTP method (POST or PUT) for adding to the cart
+            url: `/addToCart`, // Replace with your actual route for adding to the cart
+            data: { userId: userId, productId: productId }, // Pass the product ID in the request body or as query parameters
+            dataType: "json",
+            success: function(response) {
+                // Handle a successful response (e.g., update UI, show a success message)
+                //alert(response.message);
+                swal({
+                    title:response.message,
+                    icon:"success",
+                    timer: 1000,
+                    /* buttons: false, */
+                });
+                console.log("Product added to cart:", response);
+            },
+            error: function(xhr, status, error) {
+                // Handle errors (e.g., display an error message)
+                console.error("Error adding product to cart:", error);
+            }
+        });
+    });
+    // Event listener for the "Delete" button
+    $(".delete-favorite-item").click(function(event) {
+        event.preventDefault(); // Prevent the default link behavior
+
+        // Get the product ID from the data-product-id attribute
+        const productId = $(this).data("product-id");
+
+        // Send an AJAX request to delete the favorite item
+        $.ajax({
+            type: "POST", // Use the appropriate HTTP method (POST or DELETE) for item deletion
+            url: `/deleteFavorite/${userId}`, // Replace with your actual route for deleting favorite items
+            data: { productId: productId }, // Pass the product ID in the request body or as query parameters
+            dataType: "json",
+            success: function(response) {
+                // Handle a successful response (e.g., update UI, show a success message)
+                console.log("Item deleted from favorites:", response);
+
+                // Remove the deleted item from the UI
+                $(event.target).closest("tr").remove();
+            },
+            error: function(xhr, status, error) {
+                // Handle errors (e.g., display an error message)
+                console.error("Error deleting item from favorites:", error);
+            }
+        });
+    });
+});
+
+</script>
+<!-- ----------------------------------------------------------------------------------- -->
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+<%- include('includes/tail-end') %>
