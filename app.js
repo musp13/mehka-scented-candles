@@ -11,7 +11,10 @@ const flash = require('connect-flash');
 const dotenv = require('dotenv');
 dotenv.config();
 
-mongoose.connect(process.env.MONGOLAB_URI);
+/* mongoose.connect(process.env.MONGOLAB_URI); */
+mongoose.connect(process.env.MONGOLAB_URI,{useUnifiedTopology:true,useNewUrlParser:true})
+        .then(()=>console.log("e don connect"))
+        .catch(err => console.log(err));
 
 app.use('/path/to/your/fonts', express.static(__dirname + '/public'));
 
