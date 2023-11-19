@@ -585,6 +585,7 @@ const userProductList = async (req,res)=>{
                     ],
                 },
                 { category: { $in: nonHiddenCategoryIds } }, // Filter by non-hidden categories
+                {isDeleted : {$ne: true}},
                 filterOptions,
             ],
             }).countDocuments();
