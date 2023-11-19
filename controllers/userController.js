@@ -50,10 +50,13 @@ const sendVerifyMail=async (name,email,user_id)=>{
             }
         });
         const mailOptions = {
-            from:emailUser,
+            from: {
+                name: 'Mehka',
+                address: emailUser,
+            },
             to: email,
             subject:'For Email Verification',
-            html:'<p>Hi '+name+'. Please click here to <a href="http://localhost:3000/verify_user?id='+user_id+'">verify your email</a>. </p>'
+            html:'<p>Hi '+name+'. Please click here to <a href="/verify_user?id='+user_id+'">verify your email</a>. </p>'
         }
         transporter.sendMail(mailOptions,(error,info)=>{
             if(error)
@@ -266,10 +269,13 @@ const sendResetMail=async (name,email,token)=>{
             }
         });
         const mailOptions = {
-            from:emailUser,
+            from: {
+                name: 'Mehka',
+                address: emailUser,
+            },
             to: email,
             subject:'For Reset Password',
-            html:'<p>Hi '+name+'. Please click here to <a href="http://localhost:3000/reset_password?token='+token+'">reset your password</a>. </p>'
+            html:'<p>Hi '+name+'. Please click here to <a href="/reset_password?token='+token+'">reset your password</a>. </p>'
         }
         transporter.sendMail(mailOptions,(error,info)=>{
             if(error)
@@ -352,7 +358,10 @@ const sendOtpMail = async (name,email,otp)=>{
         });
          // Modify your email sending logic to include the OTP
          const mailOptions = {
-            from: emailUser,
+            from: {
+                name: 'Mehka',
+                address: emailUser,
+            },
             to: email,
             subject: 'Your OTP for Login',
             html: `<p>Hi ${name}, your OTP for login is: ${otp}</p>`
